@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiD Trainer v2: Рулетка + Экзамен</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse-green { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        .animate-pulse-green { animation: pulse-green 0.3s ease-out; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- ИКОНКИ ---
+        const Icons = {
+            Clock: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+            Check: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+            X: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+            Bulb: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-1 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>,
+            Home: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+            Zap: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+            GradCap: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        };
+
+        // --- БАЗА ВОПРОСОВ ---
+        const questionsBase = [
+            // POLITIK
+            { id: 1, question: "Welches ist das Wappen der Bundesrepublik Deutschland?", options: [{ text: "Der Bundesadler", correct: true }, { text: "Der Bär", correct: false }, { text: "Der Löwe", correct: false }, { text: "Das Pferd", correct: false }], hint: "Официальный символ Германии — Орел (Adler)." },
+            { id: 2, question: "Wie viele Bundesländer hat die Bundesrepublik Deutschland?", options: [{ text: "14", correct: false }, { text: "15", correct: false }, { text: "16", correct: true }, { text: "17", correct: false }], hint: "В Германии 16 федеральных земель." },
+            { id: 3, question: "Deutschland ist ein ...", options: [{ text: "sozialistischer Staat", correct: false }, { text: "Bundesstaat", correct: false }, { text: "Rechtsstaat", correct: true }, { text: "Zentralstaat", correct: false }], hint: "Rechtsstaat (Правовое государство) — все подчиняются Закону." },
+            { id: 4, question: "Welches Recht gehört zu den Grundrechten?", options: [{ text: "Waffenbesitz", correct: false }, { text: "Meinungsfreiheit", correct: true }, { text: "Selbstjustiz", correct: false }, { text: "Faustrecht", correct: false }], hint: "Meinungsfreiheit — свобода выражать своё мнение." },
+            { id: 5, question: "Wahlen in Deutschland sind ...", options: [{ text: "geheim", correct: true }, { text: "berufsbezogen", correct: false }, { text: "öffentlich", correct: false }, { text: "abhängig", correct: false }], hint: "Geheim (Тайно) — в кабинке для голосования вы одни." },
+            { id: 6, question: "Wer wählt den Bundeskanzler?", options: [{ text: "Das Volk", correct: false }, { text: "Der Bundesrat", correct: false }, { text: "Der Bundestag", correct: true }, { text: "Der Bundespräsident", correct: false }], hint: "Народ выбирает Парламент (Bundestag), а Парламент — Канцлера." },
+            { id: 7, question: "Was ist die '5%-Hürde'?", options: [{ text: "Mindestanteil an Wählerstimmen", correct: true }, { text: "Anzahl der Minister", correct: false }, { text: "Steuerhöhe", correct: false }, { text: "Dauer der Wahlperiode", correct: false }], hint: "Барьер в 5% голосов, чтобы партия прошла в парламент." },
+            { id: 8, question: "Welche Farben hat die deutsche Flagge?", options: [{ text: "Schwarz-Rot-Gold", correct: true }, { text: "Schwarz-Rot-Gelb", correct: false }, { text: "Schwarz-Weiß-Rot", correct: false }, { text: "Blau-Weiß-Rot", correct: false }], hint: "Черный, Красный, Золотой (Gold, не Gelb!)." },
+            { id: 9, question: "Wie heißt die deutsche Verfassung?", options: [{ text: "Volksgesetz", correct: false }, { text: "Bundesgesetz", correct: false }, { text: "Deutsches Gesetz", correct: false }, { text: "Grundgesetz", correct: true }], hint: "Конституция Германии называется Grundgesetz (Основной закон)." },
+            { id: 10, question: "Was bedeutet 'Volkssouveränität'?", options: [{ text: "Der König bestimmt", correct: false }, { text: "Alle Staatsgewalt geht vom Volke aus", correct: true }, { text: "Die Polizei entscheidet", correct: false }, { text: "Die Gerichte regieren", correct: false }], hint: "Власть исходит от народа (Volk)." },
+            // GESCHICHTE
+            { id: 11, question: "Wann endete der Zweite Weltkrieg in Europa?", options: [{ text: "1933", correct: false }, { text: "1945", correct: true }, { text: "1949", correct: false }, { text: "1989", correct: false }], hint: "Конец войны — 1945 год." },
+            { id: 12, question: "Was passierte am 9. November 1989?", options: [{ text: "Beginn des 2. Weltkriegs", correct: false }, { text: "Gründung der BRD", correct: false }, { text: "Der Fall der Mauer", correct: true }, { text: "Wahl von Willy Brandt", correct: false }], hint: "Падение Берлинской стены (Mauer)." },
+            { id: 13, question: "Wie hieß der erste Bundeskanzler der BRD?", options: [{ text: "Konrad Adenauer", correct: true }, { text: "Helmut Kohl", correct: false }, { text: "Willy Brandt", correct: false }, { text: "Gerhard Schröder", correct: false }], hint: "Конрад Аденауэр." },
+            { id: 14, question: "Wann war der Tag der Deutschen Einheit?", options: [{ text: "3. Oktober 1990", correct: true }, { text: "17. Juni 1953", correct: false }, { text: "9. November 1989", correct: false }, { text: "1. Mai 1945", correct: false }], hint: "День Единства — 3 октября." },
+            // GESELLSCHAFT
+            { id: 15, question: "Wer muss in Deutschland zur Schule gehen?", options: [{ text: "Nur Kinder reicher Eltern", correct: false }, { text: "Nur deutsche Kinder", correct: false }, { text: "Alle Kinder (Schulpflicht)", correct: true }, { text: "Niemand", correct: false }], hint: "В Германии Schulpflicht — все дети обязаны ходить в школу." },
+            { id: 16, question: "Was ist eine Aufgabe der Polizei?", options: [{ text: "Gesetze beschließen", correct: false }, { text: "Gesetze überwachen", correct: true }, { text: "Steuern einsammeln", correct: false }, { text: "Urteile sprechen", correct: false }], hint: "Полиция следит за соблюдением законов." },
+            { id: 17, question: "Ab welchem Alter darf man bei der Bundestagswahl wählen?", options: [{ text: "16", correct: false }, { text: "18", correct: true }, { text: "21", correct: false }, { text: "25", correct: false }], hint: "На федеральных выборах — с 18 лет." },
+            { id: 18, question: "Wer bezahlt die Sozialversicherungen?", options: [{ text: "Nur Arbeitnehmer", correct: false }, { text: "Nur Arbeitgeber", correct: false }, { text: "Arbeitgeber und Arbeitnehmer", correct: true }, { text: "Der Staat", correct: false }], hint: "Пополам: работник и работодатель." },
+            // LAND
+            { id: 301, land: "NRW", question: "Landeshauptstadt von Nordrhein-Westfalen?", options: [{ text: "Köln", correct: false }, { text: "Bonn", correct: false }, { text: "Düsseldorf", correct: true }, { text: "Essen", correct: false }], hint: "Дюссельдорф." },
+            { id: 302, land: "Bayern", question: "Landeshauptstadt von Bayern?", options: [{ text: "München", correct: true }, { text: "Nürnberg", correct: false }, { text: "Augsburg", correct: false }, { text: "Regensburg", correct: false }], hint: "Мюнхен." }
+        ];
+
+        // --- КОМПОНЕНТ: РУЛЕТКА (ROULETTE GAME) ---
+        function RouletteGame({ onExit, bundesland }) {
+            const [questions, setQuestions] = useState([]);
+            const [currentIdx, setCurrentIdx] = useState(0);
+            const [selectedOption, setSelectedOption] = useState(null);
+            const [isAnswered, setIsAnswered] = useState(false);
+            const [score, setScore] = useState(0);
+
+            useEffect(() => {
+                // Фильтруем вопросы (Общие + Специфичные для земли)
+                const relevant = questionsBase.filter(q => !q.land || q.land === bundesland);
+                // Перемешиваем
+                setQuestions([...relevant].sort(() => 0.5 - Math.random()));
+            }, [bundesland]);
+
+            if (questions.length === 0) return null;
+
+            const q = questions[currentIdx];
+
+            const handleAnswer = (idx) => {
+                if (isAnswered) return;
+                setSelectedOption(idx);
+                setIsAnswered(true);
+                if (q.options[idx].correct) setScore(s => s + 1);
+            };
+
+            const nextQuestion = () => {
+                if (currentIdx < questions.length - 1) {
+                    setCurrentIdx(p => p + 1);
+                    setSelectedOption(null);
+                    setIsAnswered(false);
+                } else {
+                    // Конец рулетки
+                    alert(`Рулетка пройдена! Верно: ${score} из ${questions.length}`);
+                    onExit();
+                }
+            };
+
+            return (
+                <div className="min-h-screen bg-slate-100 p-4 flex flex-col items-center justify-center">
+                    <div className="max-w-2xl w-full animate-fade-in">
+                        {/* Шапка */}
+                        <div className="flex justify-between items-center mb-6">
+                            <button onClick={onExit} className="text-slate-500 hover:text-blue-600 font-bold flex items-center transition-colors">
+                                <Icons.Home/> <span className="ml-2">Меню</span>
+                            </button>
+                            <div className="bg-yellow-100 text-yellow-800 px-4 py-1 rounded-full font-bold text-sm shadow-sm flex items-center">
+                                <Icons.Zap/> <span className="ml-1">Блиц: {currentIdx + 1}/{questions.length}</span>
+                            </div>
+                        </div>
+
+                        {/* Карточка вопроса */}
+                        <div className="bg-white rounded-3xl shadow-xl p-8 mb-6 relative overflow-hidden">
+                            <h2 className="text-xl font-bold text-slate-800 mb-6 leading-snug">{q.question}</h2>
+                            
+                            <div className="space-y-3">
+                                {q.options.map((opt, idx) => {
+                                    // Логика цветов для рулетки
+                                    let btnClass = "bg-white border-2 border-slate-100 text-slate-600 hover:border-blue-200";
+                                    if (isAnswered) {
+                                        if (opt.correct) btnClass = "bg-green-100 border-green-500 text-green-800 font-bold"; // Правильный всегда зеленый
+                                        else if (selectedOption === idx) btnClass = "bg-red-100 border-red-500 text-red-800"; // Выбранный неправильный - красный
+                                        else btnClass = "bg-slate-50 border-slate-100 text-slate-400 opacity-50"; // Остальные бледные
+                                    }
+
+                                    return (
+                                        <button 
+                                            key={idx}
+                                            onClick={() => handleAnswer(idx)}
+                                            disabled={isAnswered}
+                                            className={`w-full p-4 rounded-xl text-left transition-all flex items-center justify-between ${btnClass}`}
+                                        >
+                                            <span>{opt.text}</span>
+                                            {isAnswered && opt.correct && <Icons.Check/>}
+                                            {isAnswered && !opt.correct && selectedOption === idx && <Icons.X/>}
+                                        </button>
+                                    )
+                                })}
+                            </div>
+                        </div>
+
+                        {/* Объяснение (появляется сразу) */}
+                        {isAnswered && (
+                            <div className="animate-fade-in">
+                                <div className="bg-blue-600 text-white p-6 rounded-2xl shadow-lg mb-6 relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 p-4 opacity-10"><Icons.Bulb/></div>
+                                    <p className="font-bold text-blue-100 text-xs uppercase tracking-wider mb-2">Почему это правильно?</p>
+                                    <p className="text-lg leading-relaxed">{q.hint}</p>
+                                </div>
+                                <button onClick={nextQuestion} className="w-full py-4 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-900 shadow-xl transition-all transform hover:-translate-y-1">
+                                    Следующий вопрос →
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        // --- КОМПОНЕНТ: ЭКЗАМЕН (EXAM GAME - OLD LOGIC) ---
+        function ExamGame({ onExit, bundesland }) {
+            const [examQuestions, setExamQuestions] = useState([]);
+            const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+            const [answers, setAnswers] = useState({});
+            const [timeLeft, setTimeLeft] = useState(60 * 60);
+            const [isFinished, setIsFinished] = useState(false);
+
+            useEffect(() => {
+                const general = questionsBase.filter(q => !q.land).sort(() => 0.5 - Math.random()).slice(0, 20);
+                const landSpecific = questionsBase.filter(q => q.land === bundesland);
+                setExamQuestions([...general, ...landSpecific]);
+            }, [bundesland]);
+
+            useEffect(() => {
+                if (!isFinished && timeLeft > 0) {
+                    const timer = setInterval(() => setTimeLeft(p => p - 1), 1000);
+                    return () => clearInterval(timer);
+                }
+            }, [timeLeft, isFinished]);
+
+            const handleAnswer = (idx) => {
+                setAnswers(prev => ({ ...prev, [currentQuestionIndex]: idx }));
+                setTimeout(() => {
+                    if (currentQuestionIndex < examQuestions.length - 1) setCurrentQuestionIndex(p => p + 1);
+                }, 300);
+            };
+
+            const calculateScore = () => examQuestions.reduce((acc, q, i) => acc + (answers[i] !== undefined && q.options[answers[i]].correct ? 1 : 0), 0);
+            const formatTime = (s) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
+
+            if (isFinished) {
+                const score = calculateScore();
+                const total = examQuestions.length;
+                const passed = score >= 17; // 17 из 33 (тут из total)
+                return (
+                    <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4">
+                        <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-xl text-center animate-fade-in">
+                            <div className="text-6xl mb-4">{passed ? '🎉' : '🧐'}</div>
+                            <h2 className="text-3xl font-bold text-slate-800 mb-2">Результат</h2>
+                            <div className="text-5xl font-black text-blue-600 mb-6">{score} / {total}</div>
+                            <button onClick={onExit} className="w-full py-3 bg-slate-800 text-white rounded-xl font-bold">В меню</button>
+                        </div>
+                    </div>
+                );
+            }
+
+            if (examQuestions.length === 0) return null;
+            const q = examQuestions[currentQuestionIndex];
+            const selected = answers[currentQuestionIndex];
+
+            return (
+                <div className="min-h-screen bg-white p-4 flex flex-col items-center">
+                    <div className="max-w-2xl w-full">
+                        <div className="flex justify-between items-center mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                            <button onClick={onExit} className="text-slate-400 hover:text-slate-800"><Icons.Home/></button>
+                            <div className="font-mono font-bold text-xl text-slate-700 flex items-center"><Icons.Clock/> <span className="ml-2">{formatTime(timeLeft)}</span></div>
+                            <div className="text-slate-500 font-bold text-sm">{currentQuestionIndex + 1} / {examQuestions.length}</div>
+                        </div>
+                        <div className="p-2">
+                            <h2 className="text-xl font-bold text-slate-800 mb-6">{q.question}</h2>
+                            <div className="space-y-3">
+                                {q.options.map((opt, idx) => (
+                                    <button key={idx} onClick={() => handleAnswer(idx)} className={`w-full p-4 rounded-xl text-left font-medium border-2 transition-all ${selected === idx ? 'border-blue-600 bg-blue-50 text-blue-800' : 'border-slate-200 hover:border-blue-300'}`}>
+                                        <div className="flex items-center">
+                                            <div className={`w-5 h-5 rounded-full border-2 mr-3 flex-shrink-0 ${selected === idx ? 'bg-blue-600 border-blue-600' : 'border-slate-300'}`}></div>
+                                            {opt.text}
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="mt-8 flex justify-end">
+                            <button onClick={() => setIsFinished(true)} className="text-slate-400 hover:text-red-500 text-sm font-bold">Завершить досрочно</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // --- ГЛАВНОЕ МЕНЮ ---
+        function App() {
+            const [view, setView] = useState('welcome');
+            const [bundesland, setBundesland] = useState('NRW');
+
+            if (view === 'exam') return <ExamGame onExit={() => setView('welcome')} bundesland={bundesland} />;
+            if (view === 'roulette') return <RouletteGame onExit={() => setView('welcome')} bundesland={bundesland} />;
+
+            return (
+                <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800 p-4 font-sans">
+                    <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl animate-fade-in relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-yellow-400 via-red-500 to-black"></div>
+                        
+                        <div className="text-center mb-8 mt-4">
+                            <h1 className="text-4xl font-extrabold text-slate-800 mb-1 tracking-tight">LiD Trainer</h1>
+                            <p className="text-slate-500 font-medium">Leben in Deutschland</p>
+                        </div>
+
+                        <div className="bg-slate-50 p-4 rounded-2xl mb-8 border border-slate-100">
+                            <label className="block text-xs font-bold text-slate-400 uppercase mb-2 tracking-wider">Земля (Bundesland):</label>
+                            <select value={bundesland} onChange={(e) => setBundesland(e.target.value)} className="w-full p-3 bg-white rounded-xl border border-slate-200 font-bold text-slate-700 focus:border-blue-500 outline-none shadow-sm">
+                                <option value="NRW">Nordrhein-Westfalen</option>
+                                <option value="Bayern">Bayern</option>
+                                <option value="Berlin">Berlin</option>
+                            </select>
+                        </div>
+
+                        <div className="space-y-4">
+                            <button onClick={() => setView('roulette')} className="w-full p-5 bg-blue-600 text-white rounded-2xl font-bold text-left hover:bg-blue-700 transition-all shadow-lg group relative overflow-hidden">
+                                <div className="absolute right-0 top-0 p-4 opacity-10"><Icons.Zap/></div>
+                                <div className="flex items-center mb-1">
+                                    <span className="bg-white/20 p-2 rounded-lg mr-3"><Icons.Zap/></span>
+                                    <span className="text-lg">Блиц-Рулетка</span>
+                                </div>
+                                <p className="text-blue-100 text-sm pl-[52px] opacity-90">Моментальный ответ + объяснения</p>
+                            </button>
+
+                            <button onClick={() => setView('exam')} className="w-full p-5 bg-white border-2 border-slate-100 text-slate-700 rounded-2xl font-bold text-left hover:border-slate-300 transition-all shadow-sm group">
+                                <div className="flex items-center mb-1">
+                                    <span className="bg-slate-100 text-slate-500 p-2 rounded-lg mr-3 group-hover:bg-slate-200 transition-colors"><Icons.GradCap/></span>
+                                    <span className="text-lg">Симуляция Экзамена</span>
+                                </div>
+                                <p className="text-slate-400 text-sm pl-[52px]">60 минут • Без подсказок</p>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

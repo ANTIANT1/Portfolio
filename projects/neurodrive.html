@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroDrive - AI-Powered ETL Pipeline | Yevhenii Korchevskyi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #f093fb;
+            --secondary: #f5576c;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 1000;
+            background: white;
+            padding: 1rem;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-decoration: none;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--primary);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 16px;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .flow-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .flow-step {
+            flex: 1;
+            min-width: 150px;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            text-align: center;
+            position: relative;
+        }
+
+        .flow-step::after {
+            content: '→';
+            position: absolute;
+            right: -2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .flow-step:last-child::after {
+            display: none;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tech-tag {
+            background: var(--light);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .cta {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            border-radius: 16px;
+            margin: 4rem 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: white;
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .flow-step::after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+
+    <section class="hero">
+        <h1>🧠 NeuroDrive</h1>
+        <p class="tagline" style="font-size: 1.5rem; margin-bottom: 2rem;">AI-Powered Document Processing Pipeline</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1.5rem; border-radius: 50px;">Python</span>
+            <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1.5rem; border-radius: 50px;">Google Drive API</span>
+            <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1.5rem; border-radius: 50px;">OpenAI GPT-4o</span>
+            <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1.5rem; border-radius: 50px;">n8n</span>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-number">1000+</span>
+                <span class="stat-label">Documents Processed</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">5</span>
+                <span class="stat-label">Pipeline Stages</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">OAuth2</span>
+                <span class="stat-label">Secure Auth</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Production Status</span>
+            </div>
+        </div>
+
+        <section class="section">
+            <h2>Project Overview</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8; color: #64748b;">
+                NeuroDrive is an automated ETL (Extract, Transform, Load) pipeline that intelligently processes documents from Google Drive, 
+                applies AI-powered categorization and analysis, and generates structured Markdown files for Obsidian knowledge base. 
+                Successfully processed 1000+ documents in production environment.
+            </p>
+        </section>
+
+        <section class="section">
+            <h2>Pipeline Architecture</h2>
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <i class="fab fa-google-drive" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                    <h4>1. Collector</h4>
+                    <p>Google Drive API</p>
+                </div>
+                <div class="flow-step">
+                    <i class="fas fa-file-alt" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                    <h4>2. Extractor</h4>
+                    <p>Text Processing</p>
+                </div>
+                <div class="flow-step">
+                    <i class="fas fa-brain" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                    <h4>3. AI Brain</h4>
+                    <p>GPT-4o Analysis</p>
+                </div>
+                <div class="flow-step">
+                    <i class="fas fa-file-code" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                    <h4>4. Builder</h4>
+                    <p>Markdown Gen</p>
+                </div>
+                <div class="flow-step">
+                    <i class="fas fa-robot" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                    <h4>5. Automation</h4>
+                    <p>n8n Webhook</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Key Features</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3><i class="fab fa-google"></i> Google Drive Integration</h3>
+                    <p>OAuth2 authentication with credentials.json. Automatic file collection with support for Docs, Sheets, PDFs. Date-based relationship detection.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">OAuth2</span>
+                        <span class="tech-tag">Drive API v3</span>
+                        <span class="tech-tag">Python SDK</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-magic"></i> Smart Title Generation</h3>
+                    <p>AI-powered title generation based on document content. Replaces generic "Untitled" with meaningful names extracted from text.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">NLP</span>
+                        <span class="tech-tag">Content Analysis</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-brain"></i> AI Categorization</h3>
+                    <p>OpenAI GPT-4o analyzes content and assigns categories, extracts action items, generates summaries, identifies related projects.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">GPT-4o</span>
+                        <span class="tech-tag">Prompt Engineering</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-file-code"></i> Obsidian Integration</h3>
+                    <p>Generates properly formatted Markdown files with YAML frontmatter, backlinks, tags, and metadata. Integrates into Obsidian vault structure.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Markdown</span>
+                        <span class="tech-tag">YAML</span>
+                        <span class="tech-tag">Obsidian</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-robot"></i> n8n Automation</h3>
+                    <p>Webhook integration for triggering downstream workflows. Sends summaries, action items, and metadata to automation platform.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">n8n</span>
+                        <span class="tech-tag">Webhooks</span>
+                        <span class="tech-tag">HTTP</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-database"></i> SQLite Storage</h3>
+                    <p>Local database for tracking processed files, caching metadata, storing analysis results. Prevents duplicate processing.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">SQLite</span>
+                        <span class="tech-tag">Python DB-API</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Technical Implementation</h2>
+            <div class="card">
+                <h3>Module Structure</h3>
+                <pre style="background: var(--light); padding: 1.5rem; border-radius: 8px; overflow-x: auto;">
+NeuroDrive/
+├── main.py                 # Entry point
+├── src/
+│   ├── config/
+│   │   └── settings.py     # Configuration management
+│   ├── core/
+│   │   └── pipeline.py     # Main ETL orchestrator
+│   └── modules/
+│       ├── collector.py    # Google Drive collection
+│       ├── extractor.py    # Text extraction
+│       ├── brain.py        # AI analysis (OpenAI)
+│       ├── builder.py      # Markdown generation
+│       └── automation.py   # n8n webhook
+├── config/
+│   └── credentials.json    # Google OAuth2 credentials
+└── requirements.txt        # Dependencies
+                </pre>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Technologies Used</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Core Stack</h3>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Python 3.11</span>
+                        <span class="tech-tag">Google Drive API</span>
+                        <span class="tech-tag">OpenAI API</span>
+                        <span class="tech-tag">SQLite3</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Libraries</h3>
+                    <div class="tech-stack">
+                        <span class="tech-tag">google-auth</span>
+                        <span class="tech-tag">openai</span>
+                        <span class="tech-tag">python-dotenv</span>
+                        <span class="tech-tag">requests</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Production Results</h2>
+            <div class="card">
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 1rem 0; border-bottom: 1px solid #e2e8f0;">
+                        <strong>✓ 1000+ Documents:</strong> Successfully processed entire Google Drive archive with 100% success rate
+                    </li>
+                    <li style="padding: 1rem 0; border-bottom: 1px solid #e2e8f0;">
+                        <strong>✓ Smart Categorization:</strong> AI-powered organization reduced manual sorting time by 90%
+                    </li>
+                    <li style="padding: 1rem 0; border-bottom: 1px solid #e2e8f0;">
+                        <strong>✓ Obsidian Integration:</strong> Seamless integration with existing knowledge base structure
+                    </li>
+                    <li style="padding: 1rem 0;">
+                        <strong>✓ Automation Ready:</strong> n8n webhook integration enables complex downstream workflows
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="cta">
+            <h2>Interested in Document Automation?</h2>
+            <p style="font-size: 1.1rem; margin-bottom: 2rem;">
+                This project demonstrates expertise in API integration, AI systems, and production automation.
+            </p>
+            <a href="../index.html#contact" class="btn">
+                <i class="fas fa-envelope"></i> Let's Talk
+            </a>
+        </div>
+    </div>
+</body>
+</html>

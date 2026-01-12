@@ -1,0 +1,22 @@
+# Development files
+test-buttons.html
+*.md
+!README.md
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Logs
+*.log

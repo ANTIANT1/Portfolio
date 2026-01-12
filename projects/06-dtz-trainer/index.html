@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTZ Profi-Trainer B1 (Full v3)</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        .animate-slide-in { animation: slideIn 0.3s ease-out forwards; }
+        .perspective { perspective: 1000px; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .backface-hidden { backface-visibility: hidden; }
+        .preserve-3d { transform-style: preserve-3d; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+        
+        // --- ИКОНКИ ---
+        const Icons = {
+            Home: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
+            Check: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+            X: () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+            Book: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>,
+            Brain: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>,
+            Read: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>,
+            Trophy: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>,
+            Alert: ({className}) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+        };
+
+        // ================= ДАННЫЕ 100 ВОПРОСОВ =================
+        
+        const quizData = {
+          block1: {
+            title: "1. Грамматика: Логика (Weil, Ob...)",
+            questions: [
+              { id: 1, question: "Ich kann nicht kommen, weil ich krank ______.", options: ["bin", "ist", "sind", "war"], correct: 0, explanation: "Weil -> Глагол в конец." },
+              { id: 2, question: "Ich bin krank, deshalb ______ zu Hause.", options: ["ich bleibe", "bleibe ich", "bleibe", "ich bin"], correct: 1, explanation: "Deshalb -> Глагол сразу (2-я позиция)." },
+              { id: 3, question: "Ich weiß nicht, ______ ich Zeit habe.", options: ["wenn", "ob", "dass", "weil"], correct: 1, explanation: "Не знаю, есть ЛИ у меня время (Ob)." },
+              { id: 4, question: "Ruf mich an, ______ du fertig bist.", options: ["ob", "wann", "wenn", "als"], correct: 2, explanation: "Условие/Время в будущем = Wenn." },
+              { id: 5, question: "Er sagt, ______ er morgen kommt.", options: ["dass", "weil", "ob", "wenn"], correct: 0, explanation: "Косвенная речь (что...) = dass." },
+              { id: 6, question: "Ich habe keine Zeit, ins Kino ______.", options: ["gehen", "zu gehen", "gehe", "zu gehe"], correct: 1, explanation: "Habe Zeit -> zu + Infinitiv." },
+              { id: 7, question: "Ich möchte Deutsch ______.", options: ["lernen", "zu lernen", "lerne", "gelernt"], correct: 0, explanation: "Möchte (Модальный) -> без zu." },
+              { id: 8, question: "Es ist wichtig, viel Wasser ______.", options: ["trinken", "zu trinken", "trinkt", "getrunken"], correct: 1, explanation: "Es ist wichtig -> zu + Infinitiv." },
+              { id: 9, question: "Obwohl es regnet, ______ ich spazieren.", options: ["gehe", "ich gehe", "gehe ich", "gehen"], correct: 2, explanation: "Obwohl -> Глагол в конце придаточного, затем сразу Глагол главного." },
+              { id: 10, question: "Seit ich in Deutschland bin, ______ ich Deutsch.", options: ["lerne", "lernen", "ich lerne", "habe gelernt"], correct: 0, explanation: "Seit... (запятая) -> Глагол." },
+              { id: 11, question: "Ich lerne Deutsch, ______ ich Arbeit suche.", options: ["denn", "weil", "deshalb", "trotzdem"], correct: 1, explanation: "Weil = Причина (глагол в конце)." },
+              { id: 12, question: "Ich komme nicht, ______ ich habe keine Lust.", options: ["weil", "denn", "deshalb", "obwohl"], correct: 1, explanation: "Denn = Причина (но порядок слов прямой!)." },
+              { id: 13, question: "Damit ich den Test bestehe, ______ ich viel.", options: ["lerne", "lernen", "ich lerne", "gelernt"], correct: 0, explanation: "Damit... -> Глагол." },
+              { id: 14, question: "Hast du Lust, ______?", options: ["zu kommen", "kommen", "kommst", "gekommen"], correct: 0, explanation: "Lust haben -> zu + Infinitiv." },
+              { id: 15, question: "Ich fange an, das Buch ______.", options: ["lesen", "zu lesen", "lese", "gelesen"], correct: 1, explanation: "Anfangen -> zu + Infinitiv." },
+              { id: 16, question: "Ich verspreche dir, ______.", options: ["zu helfen", "helfen", "hilft", "geholfen"], correct: 0, explanation: "Versprechen -> zu + Infinitiv." },
+              { id: 17, question: "Können Sie mir sagen, wie spät es ______?", options: ["ist", "sind", "war", "sein"], correct: 0, explanation: "Косвенный вопрос -> Глагол в конец." },
+              { id: 18, question: "Ich gehe einkaufen, ______ der Kühlschrank leer ist.", options: ["weil", "denn", "deshalb", "ob"], correct: 0, explanation: "Причина." },
+              { id: 19, question: "Er ist müde, ______ geht er schlafen.", options: ["weil", "denn", "deshalb", "dass"], correct: 2, explanation: "Следствие." },
+              { id: 20, question: "Bitte sag mir, ______ du kommst.", options: ["wann", "als", "wenn", "damit"], correct: 0, explanation: "Вопрос 'Когда?' в середине предложения." }
+            ]
+          },
+          block2: {
+            title: "2. Грамматика: Глаголы",
+            questions: [
+              { id: 21, question: "Ich ______ nach Berlin gefahren.", options: ["habe", "bin", "werde", "hatte"], correct: 1, explanation: "Perfekt движения = Sein." },
+              { id: 22, question: "Wir ______ Pizza gegessen.", options: ["sind", "haben", "werden", "hatten"], correct: 1, explanation: "Perfekt обычный = Haben." },
+              { id: 23, question: "Er ______ früh aufgestanden.", options: ["ist", "hat", "wird", "war"], correct: 0, explanation: "Изменение состояния = Sein." },
+              { id: 24, question: "Was hast du ______?", options: ["gemacht", "machen", "gemachen", "machte"], correct: 0, explanation: "Partizip II." },
+              { id: 25, question: "Ich habe das Buch ______.", options: ["gelesen", "gelest", "lesen", "lese"], correct: 0, explanation: "Сильный глагол lesen -> gelesen." },
+              { id: 26, question: "Hier ______ man nicht rauchen.", options: ["darf", "kann", "muss", "will"], correct: 0, explanation: "Запрет = Dürfen." },
+              { id: 27, question: "Ich bin krank, ich ______ zum Arzt gehen.", options: ["darf", "kann", "muss", "will"], correct: 2, explanation: "Необходимость = Müssen." },
+              { id: 28, question: "______ du mir bitte helfen?", options: ["Kannst", "Musst", "Darfst", "Sollst"], correct: 0, explanation: "Просьба = Können." },
+              { id: 29, question: "Der Arzt sagt, ich ______ Tabletten nehmen.", options: ["soll", "darf", "kann", "will"], correct: 0, explanation: "Поручение (врач сказал) = Sollen." },
+              { id: 30, question: "Frau Müller, bitte ______ Sie mir.", options: ["helfen", "helft", "hilf", "hilft"], correct: 0, explanation: "Imperativ Sie -> Helfen Sie." },
+              { id: 31, question: "Thomas, ______ das Fenster zu!", options: ["machen", "mach", "macht", "machen Sie"], correct: 1, explanation: "Imperativ Du -> Mach." },
+              { id: 32, question: "Kinder, ______ bitte leise!", options: ["seid", "sein", "sind", "bist"], correct: 0, explanation: "Imperativ Ihr -> Seid." },
+              { id: 33, question: "Ich ______ mich auf den Urlaub.", options: ["freue", "warte", "interessiere", "lust"], correct: 0, explanation: "Sich freuen (Reflexiv)." },
+              { id: 34, question: "Wann ______ der Zug an?", options: ["kommt", "geht", "fährt", "steht"], correct: 0, explanation: "Ankommen (прибывать)." },
+              { id: 35, question: "Ich ______ dich später an.", options: ["rufe", "telefonieren", "spreche", "sage"], correct: 0, explanation: "Anrufen (звонить)." },
+              { id: 36, question: "Ich ______ gerne Tee.", options: ["trinke", "esse", "nehme", "habe"], correct: 0, explanation: "Trinken." },
+              { id: 37, question: "Gestern ______ ich im Kino.", options: ["war", "bin", "habe", "wurde"], correct: 0, explanation: "Präteritum Sein -> War." },
+              { id: 38, question: "Früher ______ ich viel Sport gemacht.", options: ["habe", "bin", "hatte", "war"], correct: 0, explanation: "Perfekt machen -> Habe gemacht." },
+              { id: 39, question: "Wir ______ am Wochenende grillen.", options: ["wollen", "sollen", "müssen", "dürfen"], correct: 0, explanation: "Желание/План = Wollen." },
+              { id: 40, question: "Es ______ gleich regnen.", options: ["wird", "ist", "hat", "wurde"], correct: 0, explanation: "Futur (будет) -> Wird." }
+            ]
+          },
+          block3: {
+            title: "3. Грамматика: Падежи",
+            questions: [
+              { id: 41, question: "Ich fahre mit ______ Zug (m).", options: ["den", "dem", "der", "des"], correct: 1, explanation: "Mit + Dativ. Мужской -> dem." },
+              { id: 42, question: "Das ist für ______ Vater (m).", options: ["mein", "meinen", "meinem", "meines"], correct: 1, explanation: "Für + Akkusativ. Мужской -> meinen." },
+              { id: 43, question: "Ich brauche ______ Termin (m).", options: ["einen", "ein", "einem", "einer"], correct: 0, explanation: "Akkusativ -> einen." },
+              { id: 44, question: "Das Buch liegt auf ______ Tisch (m).", options: ["dem", "den", "der", "die"], correct: 0, explanation: "Где? (Dativ) -> dem." },
+              { id: 45, question: "Ich lege das Buch auf ______ Tisch (m).", options: ["den", "dem", "der", "die"], correct: 0, explanation: "Куда? (Akk) -> den." },
+              { id: 46, question: "Ich helfe ______ Frau (f).", options: ["der", "die", "den", "dem"], correct: 0, explanation: "Helfen + Dativ. Женский -> der." },
+              { id: 47, question: "Ich gratuliere ______ Mann (m).", options: ["dem", "den", "der", "des"], correct: 0, explanation: "Gratulieren + Dativ." },
+              { id: 48, question: "Ich sehe ______ Kind (n).", options: ["das", "dem", "den", "des"], correct: 0, explanation: "Sehen + Akkusativ. Средний -> das." },
+              { id: 49, question: "Ich gehe zu ______ Arzt (m).", options: ["dem", "den", "der", "die"], correct: 0, explanation: "Zu + Dativ (zum)." },
+              { id: 50, question: "Wir wohnen bei ______ Eltern (Pl).", options: ["meinen", "meine", "meiner", "meinem"], correct: 0, explanation: "Bei + Dativ Plural -> meinen." },
+              { id: 51, question: "Ohne ______ Brille sehe ich nichts.", options: ["meine", "meiner", "meinen", "mein"], correct: 0, explanation: "Ohne + Akkusativ." },
+              { id: 52, question: "Seit ______ Jahr (n) lerne ich Deutsch.", options: ["einem", "ein", "einen", "eines"], correct: 0, explanation: "Seit + Dativ." },
+              { id: 53, question: "Ich schenke ______ Freundin (f) Blumen.", options: ["meiner", "meine", "meinen", "mein"], correct: 0, explanation: "Кому? (Dativ)." },
+              { id: 54, question: "Das Auto gehört ______ Chef (m).", options: ["dem", "den", "der", "des"], correct: 0, explanation: "Gehören (принадлежать) + Dativ." },
+              { id: 55, question: "Ich warte auf ______ Bus (m).", options: ["den", "dem", "der", "des"], correct: 0, explanation: "Warten auf + Akk." },
+              { id: 56, question: "Wir sprechen mit ______ Lehrer (m).", options: ["dem", "den", "der", "die"], correct: 0, explanation: "Mit + Dativ." },
+              { id: 57, question: "Gegenüber ______ Post (f) ist die Bank.", options: ["der", "die", "dem", "den"], correct: 0, explanation: "Gegenüber + Dativ." },
+              { id: 58, question: "Durch ______ Park (m) gehen.", options: ["den", "dem", "der", "die"], correct: 0, explanation: "Durch + Akkusativ." },
+              { id: 59, question: "Um 8 ______ treffe ich dich.", options: ["Uhr", "Stunde", "Zeit", "Mal"], correct: 0, explanation: "Um ... Uhr." },
+              { id: 60, question: "Am ______ arbeite ich nicht.", options: ["Montag", "Januar", "2023", "Abend"], correct: 0, explanation: "Am + День недели." }
+            ]
+          },
+          block4: {
+            title: "4. Грамматика: Прилагательные",
+            questions: [
+              { id: 61, question: "Der ______ Mann (m) ist hier.", options: ["gute", "guter", "guten", "gutes"], correct: 0, explanation: "Nom, der -> -e." },
+              { id: 62, question: "Ich sehe den ______ Mann (m).", options: ["guten", "guter", "gute", "gutes"], correct: 0, explanation: "Akk, den -> -en." },
+              { id: 63, question: "Ich helfe der ______ Frau (f).", options: ["alten", "alte", "alter", "altem"], correct: 0, explanation: "Dat, der -> -en." },
+              { id: 64, question: "Das ist ein ______ Auto (n).", options: ["schönes", "schöne", "schöner", "schönen"], correct: 0, explanation: "Nom, ein -> -es." },
+              { id: 65, question: "Ich trinke ______ Kaffee (m).", options: ["schwarzen", "schwarzer", "schwarze", "schwarzes"], correct: 0, explanation: "Akk, без артикля -> -en." },
+              { id: 66, question: "Mit ______ Grüßen (Pl).", options: ["freundlichen", "freundliche", "freundlicher", "freundliches"], correct: 0, explanation: "Dat Pl -> -en." },
+              { id: 67, question: "Lieb______ Anna (f),", options: ["-e", "-er", "-en", "-es"], correct: 0, explanation: "Liebe Anna." },
+              { id: 68, question: "Lieb______ Thomas (m),", options: ["-er", "-e", "-en", "-es"], correct: 0, explanation: "Lieber Thomas." },
+              { id: 69, question: "Ein ______ Kind (n) spielt.", options: ["kleines", "kleine", "kleiner", "kleinen"], correct: 0, explanation: "Nom, ein -> -es." },
+              { id: 70, question: "Ich habe eine ______ Tasche (f).", options: ["neue", "neues", "neuer", "neuen"], correct: 0, explanation: "Akk, eine -> -e." },
+              { id: 71, question: "Gute ______ (f)!", options: ["Besserung", "Nacht", "Tag", "Morgen"], correct: 0, explanation: "Женский род." },
+              { id: 72, question: "Mein Auto ist ______ als deins.", options: ["schneller", "schnell", "am schnellsten", "schnelle"], correct: 0, explanation: "Сравнение -> -er." },
+              { id: 73, question: "Er ist der ______ Läufer.", options: ["schnellste", "schneller", "schnell", "am schnellsten"], correct: 0, explanation: "Superlativ -> -ste." },
+              { id: 74, question: "Ich trinke ______ Tee als Kaffee.", options: ["lieber", "gern", "besser", "gut"], correct: 0, explanation: "Gern -> Lieber." },
+              { id: 75, question: "Am ______ mag ich Pizza.", options: ["besten", "gut", "besser", "lieber"], correct: 0, explanation: "Am besten." },
+              { id: 76, question: "Welch______ Tag (m) ist heute?", options: ["-er", "-e", "-en", "-es"], correct: 0, explanation: "Welcher." },
+              { id: 77, question: "Dies______ Buch (n) ist gut.", options: ["-es", "-e", "-er", "-en"], correct: 0, explanation: "Dieses." },
+              { id: 78, question: "Ich wünsche ein ______ Wochenende (n).", options: ["schönes", "schöne", "schöner", "schönen"], correct: 0, explanation: "Akk, ein -> -es." },
+              { id: 79, question: "Bei ______ Wetter (n) bleibe ich zu Hause.", options: ["schlechtem", "schlechten", "schlechte", "schlechtes"], correct: 0, explanation: "Dat, без артикля -> -em." },
+              { id: 80, question: "Viele ______ Leute (Pl).", options: ["nette", "netten", "netter", "nettes"], correct: 0, explanation: "Viele (как нулевой артикль) -> nette." }
+            ]
+          },
+          block5: {
+            title: "5. Лексика и Ситуации",
+            description: "Письма, Работа, Жилье",
+            questions: [
+              { id: 81, question: "Sehr geehrte ______ und Herren,", options: ["Damen", "Frauen", "Leute", "Menschen"], correct: 0, explanation: "Клише." },
+              { id: 82, question: "Mit freundlichen ______.", options: ["Grüßen", "Grüße", "Gruß", "Gegrüßt"], correct: 0, explanation: "Всегда Dativ Plural." },
+              { id: 83, question: "Ich schreibe Ihnen, ______.", options: ["weil", "denn", "deshalb", "trotzdem"], correct: 0, explanation: "Причина." },
+              { id: 84, question: "Ich möchte einen Termin ______.", options: ["vereinbaren", "machen", "tun", "sagen"], correct: 0, explanation: "Клише." },
+              { id: 85, question: "Können wir den Termin ______?", options: ["verschieben", "schieben", "bewegen", "wechseln"], correct: 0, explanation: "Перенести." },
+              { id: 86, question: "Ich muss den Termin ______.", options: ["absagen", "mitsagen", "ausmachen", "anmachen"], correct: 0, explanation: "Отменить." },
+              { id: 87, question: "Geben Sie mir bitte ______.", options: ["Bescheid", "Antwort", "Information", "Wissen"], correct: 0, explanation: "Bescheid geben." },
+              { id: 88, question: "Ich ______ auf Ihre Antwort.", options: ["warte", "erwarte", "hoffe", "freue"], correct: 0, explanation: "Warten auf." },
+              { id: 89, question: "Ich ______ mich auf Ihre Antwort.", options: ["freue", "warte", "hoffe", "denke"], correct: 0, explanation: "Sich freuen auf." },
+              { id: 90, question: "Die Wohnung ist 50 ______ groß.", options: ["Quadratmeter", "Meter", "Zentimeter", "Kilometer"], correct: 0, explanation: "Жилая площадь." },
+              { id: 91, question: "Wie hoch ist die ______?", options: ["Miete", "Geld", "Kosten", "Preis"], correct: 0, explanation: "Аренда." },
+              { id: 92, question: "Die Nebenkosten ______ 100 Euro.", options: ["betragen", "sind", "machen", "kosten"], correct: 0, explanation: "Официально: betragen." },
+              { id: 93, question: "Ich bin ______ von Beruf.", options: ["Arzt", "ein Arzt", "der Arzt", "als Arzt"], correct: 0, explanation: "Без артикля." },
+              { id: 94, question: "Ich arbeite ______ Verkäufer.", options: ["als", "wie", "bei", "für"], correct: 0, explanation: "Arbeiten als." },
+              { id: 95, question: "Ich habe viel ______.", options: ["Erfahrung", "Erlebnis", "Wissen", "Ahnung"], correct: 0, explanation: "Опыт работы." },
+              { id: 96, question: "Ich habe ______ (Kopf).", options: ["Kopfschmerzen", "Kopfschmerz", "Kopfweh", "Kopfkrank"], correct: 0, explanation: "Plural." },
+              { id: 97, question: "Ich fühle mich ______.", options: ["schlecht", "böse", "falsch", "schlimm"], correct: 0, explanation: "Плохо себя чувствую." },
+              { id: 98, question: "Gute ______!", options: ["Besserung", "Gesundheit", "Heilung", "Wiedersehen"], correct: 0, explanation: "Пожелание больному." },
+              { id: 99, question: "Der Termin fällt ______.", options: ["aus", "ab", "an", "auf"], correct: 0, explanation: "Ausfallen (отменяется)." },
+              { id: 100, question: "Vielen Dank im ______.", options: ["Voraus", "Vorne", "Anfang", "Vorher"], correct: 0, explanation: "Заранее." }
+            ]
+          }
+        };
+
+        // --- ДАННЫЕ ПИСЕМ (BRIEF) ---
+        const briefData = [
+            {
+                id: "brief1",
+                title: "Тема: Болезнь ребенка (Schule)",
+                situation: "Ваша дочь Мария заболела. Напишите учителю (Frau Müller).",
+                points: ["Grund: Почему не в школе?", "Dauer: Сколько дней?", "Hausaufgaben: Попросите задание."],
+                template: "Sehr geehrte Frau Müller,\n\nmein Name ist... Ich schreibe Ihnen, weil...",
+                solution: `Sehr geehrte Frau Müller,\n\nmein Name ist [Ваше Имя] und ich bin der Vater von Maria.\n\nIch schreibe Ihnen, weil Maria krank ist und heute nicht zur Schule kommen kann. Sie hat Fieber, deshalb muss sie drei Tage zu Hause bleiben.\nIch schicke Ihnen später das Attest.\n\nKönnten Sie mir bitte die Hausaufgaben für Maria schicken?\n\nMit freundlichen Grüßen\n\n[Ваше Имя]`,
+                checklist: ["Обращение: 'Sehr geehrte Frau Müller,' (с запятой!)", "Первое слово с маленькой буквы?", "Глагол после 'weil' в конце?", "Глагол после 'deshalb' на 2-м месте?", "Вежливая просьба: 'Könnten Sie bitte...'?"]
+            },
+            {
+                id: "brief2",
+                title: "Тема: Аренда (Vermieter)",
+                situation: "Отопление сломалось. Напишите арендодателю.",
+                points: ["Problem: Что случилось?", "Wie lange: Как давно?", "Lösung: Попросите мастера."],
+                template: "Sehr geehrte Damen und Herren,\n\nhiermit möchte ich...",
+                solution: `Sehr geehrte Damen und Herren,\n\nhiermit schreibe ich Ihnen, weil die Heizung in meiner Wohnung defekt ist.\n\nEs ist sehr kalt in der Wohnung. Die Heizung funktioniert seit drei Tagen nicht.\n\nKönnten Sie bitte einen Handwerker schicken, um die Heizung zu reparieren?\nBitte geben Sie mir Bescheid, wann der Handwerker kommen kann.\n\nMit freundlichen Grüßen\n\n[Ваше Имя]`,
+                checklist: ["Обращение: 'Damen und Herren,'?", "Слова: 'defekt' или 'kaputt'?", "Seit + Dativ (seit drei Tagen)?", "Просьба: 'einen Handwerker schicken'?"]
+            },
+            {
+                id: "brief3",
+                title: "Тема: Работа (Bewerbung)",
+                situation: "Вы пишете шефу (Herr Bergmann) насчет вакансии Водителя.",
+                points: [
+                    "Grund: Вакансия.",
+                    "Person: Опыт / Права.",
+                    "Termin: Собеседование."
+                ],
+                template: "Sehr geehrter Herr Bergmann,\n\nich habe Ihre Anzeige gelesen...",
+                solution: `Sehr geehrter Herr Bergmann,\n\nich habe Ihre Anzeige gelesen und interessiere mich sehr für die Stelle als Fahrer.\n\nIch habe den Führerschein Klasse B und viel Erfahrung. Ich fahre Auto, seit ich 18 Jahre alt bin. Ich bin zuverlässig und pünktlich.\n\nKönnten wir bitte einen Termin für ein Vorstellungsgespräch vereinbaren?\nIch freue mich auf Ihre Antwort.\n\nMit freundlichen Grüßen\n\n[Ваше Имя]`,
+                checklist: [
+                    "Обращение: 'Herr Bergmann' (мужчина -> geehrtER)?",
+                    "Вы/Ваш: Sie, Ihnen, Ihre (везде с Большой)?",
+                    "Интерес: 'interessiere mich für...'?",
+                    "Собеседование: 'Vorstellungsgespräch'?"
+                ]
+            }
+        ];
+
+        // --- ДАННЫЕ FLASHCARDS (УЛУЧШЕННЫЕ) ---
+        const initialFlashcards = [
+            { id: 1, front: "warten ... (ждать)", back: "AUF + Akkusativ", example: "Ich warte auf den Bus." },
+            { id: 2, front: "denken ... (думать о)", back: "AN + Akkusativ", example: "Ich denke an dich." },
+            { id: 3, front: "sich freuen ... (радоваться будущему)", back: "AUF + Akkusativ", example: "Ich freue mich auf den Urlaub." },
+            { id: 4, front: "sich freuen ... (радоваться свершившемуся)", back: "ÜBER + Akkusativ", example: "Ich freue mich über das Geschenk." },
+            { id: 5, front: "sich interessieren ... (интересоваться)", back: "FÜR + Akkusativ", example: "Ich interessiere mich für Sport." },
+            { id: 6, front: "träumen ... (мечтать о)", back: "VON + Dativ", example: "Ich träume von einem Haus." },
+            { id: 7, front: "sprechen ... (говорить с кем-то)", back: "MIT + Dativ", example: "Ich spreche mit dem Chef." },
+            { id: 8, front: "zufrieden sein ... (быть довольным)", back: "MIT + Dativ", example: "Ich bin mit dem Service zufrieden." },
+            { id: 9, front: "Angst haben ... (бояться)", back: "VOR + Dativ", example: "Ich habe Angst vor Hunden." },
+            { id: 10, front: "einladen ... (приглашать на)", back: "ZU + Dativ", example: "Ich lade dich zum Geburtstag ein." },
+            { id: 11, front: "sich kümmern ... (заботиться о)", back: "UM + Akkusativ", example: "Ich kümmere mich um die Kinder." },
+            { id: 12, front: "teilnehmen ... (участвовать в)", back: "AN + Dativ", example: "Ich nehme an dem Kurs teil." }
+        ];
+
+        // --- ДАННЫЕ LESEN (ЧТЕНИЕ) ---
+        const readingData = [
+            {
+                id: "read1",
+                title: "Lesen Teil 1: E-Mail von Lisa",
+                text: `Liebe Julia,\n\nwie geht es dir? Mir geht es gut, aber ich habe viel Stress. Ich bin letzte Woche umgezogen. Meine neue Wohnung ist sehr schön und hell, aber auch teuer. Sie liegt im Stadtzentrum, deshalb ist es manchmal ein bisschen laut.\n\nIch habe noch keine Möbel für das Wohnzimmer. Am Samstag fahre ich zu IKEA. Möchtest du mitkommen? Ich kann dich mit meinem Auto abholen.\n\nMelde dich bald!\n\nLiebe Grüße\nLisa`,
+                questions: [
+                    { q: "Lisa wohnt jetzt in einer neuen Wohnung.", a: true },
+                    { q: "Die Wohnung ist billig und ruhig.", a: false },
+                    { q: "Lisa möchte am Samstag Möbel kaufen.", a: true },
+                    { q: "Julia soll Lisa abholen.", a: false }
+                ]
+            },
+            {
+                id: "read2",
+                title: "Lesen Teil 3: Anzeige",
+                text: `SUCHE NACHHILFE\n\nFür meinen Sohn (12 Jahre, 6. Klasse) suche ich dringend Nachhilfe in Mathematik und Englisch. Zweimal pro Woche (Dienstag und Donnerstag) am Nachmittag. Wir wohnen in Essen-Rüttenscheid.\n\nIch biete 15 Euro pro Stunde.\n\nBitte melden Sie sich bei Frau Weber: Tel. 0176-1234567`,
+                questions: [
+                    { q: "Frau Weber sucht einen Lehrer für Musik.", a: false },
+                    { q: "Der Unterricht soll am Vormittag sein.", a: false },
+                    { q: "Frau Weber bezahlt 15 Euro für eine Stunde.", a: true },
+                    { q: "Der Sohn ist 12 Jahre alt.", a: true }
+                ]
+            }
+        ];
+
+        // --- КОМПОНЕНТЫ ---
+
+        function ReadingGame({ onExit }) {
+            const [answers, setAnswers] = useState({});
+            const [showResult, setShowResult] = useState(false);
+            const [activeTextId, setActiveTextId] = useState(0);
+
+            const currentText = readingData[activeTextId];
+
+            const handleAnswer = (qIdx, val) => {
+                setAnswers(prev => ({ ...prev, [`${activeTextId}-${qIdx}`]: val }));
+            };
+
+            const score = currentText.questions.reduce((acc, q, i) => {
+                return acc + (answers[`${activeTextId}-${i}`] === q.a ? 1 : 0);
+            }, 0);
+
+            return (
+                <div className="w-full max-w-4xl animate-fade-in mx-auto">
+                    <div className="flex justify-between mb-4">
+                        <button onClick={onExit} className="text-slate-500 hover:text-blue-600 flex items-center font-bold"><Icons.Home /> <span className="ml-2">Меню</span></button>
+                        <div className="flex gap-2">
+                            {readingData.map((_, i) => (
+                                <button key={i} onClick={() => {setActiveTextId(i); setShowResult(false); setAnswers({})}} className={`px-3 py-1 rounded-full text-sm font-bold ${activeTextId === i ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-500'}`}>Текст {i+1}</button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                        {/* Текст */}
+                        <div className="bg-white p-6 rounded-3xl shadow-lg border border-slate-100 h-fit">
+                            <h3 className="text-xl font-bold text-slate-800 mb-4 flex items-center"><Icons.Read/> <span className="ml-2">{currentText.title}</span></h3>
+                            <div className="bg-yellow-50 p-6 rounded-xl text-slate-700 whitespace-pre-wrap leading-relaxed font-serif text-lg border border-yellow-100 shadow-inner">
+                                {currentText.text}
+                            </div>
+                        </div>
+
+                        {/* Вопросы */}
+                        <div className="space-y-4">
+                            {currentText.questions.map((q, i) => {
+                                const myAns = answers[`${activeTextId}-${i}`];
+                                const isCorrect = showResult && myAns === q.a;
+                                const isWrong = showResult && myAns !== q.a;
+
+                                return (
+                                    <div key={i} className={`p-4 rounded-2xl border-2 transition-all ${isCorrect ? 'border-green-500 bg-green-50' : isWrong ? 'border-red-500 bg-red-50' : 'border-slate-200 bg-white'}`}>
+                                        <p className="font-medium text-slate-800 mb-3">{i+1}. {q.q}</p>
+                                        <div className="flex gap-2">
+                                            <button 
+                                                onClick={() => handleAnswer(i, true)} 
+                                                disabled={showResult}
+                                                className={`flex-1 py-2 rounded-lg font-bold transition-all ${myAns === true ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
+                                            >
+                                                Richtig (Верно)
+                                            </button>
+                                            <button 
+                                                onClick={() => handleAnswer(i, false)} 
+                                                disabled={showResult}
+                                                className={`flex-1 py-2 rounded-lg font-bold transition-all ${myAns === false ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
+                                            >
+                                                Falsch (Неверно)
+                                            </button>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                            
+                            {!showResult ? (
+                                <button onClick={() => setShowResult(true)} className="w-full py-4 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold shadow-lg transition-all">Проверить ответы</button>
+                            ) : (
+                                <div className="text-center p-4 bg-blue-50 rounded-xl font-bold text-blue-800">
+                                    Результат: {score} из {currentText.questions.length}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function FlashcardsGame({ onExit }) {
+            const [cards, setCards] = useState(initialFlashcards);
+            const [currentIndex, setCurrentIndex] = useState(0);
+            const [isFlipped, setIsFlipped] = useState(false);
+            const [masteredCount, setMasteredCount] = useState(0);
+            const [showCongrats, setShowCongrats] = useState(false);
+
+            const currentCard = cards[currentIndex];
+
+            const handleRate = (known) => {
+                setIsFlipped(false);
+                setTimeout(() => {
+                    if (known) {
+                        // Убираем карточку из колоды
+                        const newCards = cards.filter((_, i) => i !== currentIndex);
+                        setMasteredCount(m => m + 1);
+                        if (newCards.length === 0) {
+                            setShowCongrats(true);
+                        } else {
+                            setCards(newCards);
+                            // Если удалили последнюю, идем в начало
+                            if (currentIndex >= newCards.length) setCurrentIndex(0);
+                        }
+                    } else {
+                        // Оставляем карточку, переходим к следующей
+                        setCurrentIndex((currentIndex + 1) % cards.length);
+                    }
+                }, 200); // Ждем пока перевернется обратно
+            };
+
+            if (showCongrats) {
+                return (
+                    <div className="flex flex-col items-center justify-center h-[60vh] animate-fade-in">
+                        <div className="text-6xl mb-4">🎉</div>
+                        <h2 className="text-2xl font-bold text-slate-800 mb-2">Поздравляю!</h2>
+                        <p className="text-slate-500 mb-6">Вы выучили все слова!</p>
+                        <button onClick={onExit} className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold">В меню</button>
+                    </div>
+                )
+            }
+
+            return (
+                <div className="w-full max-w-md animate-fade-in flex flex-col items-center mx-auto pt-10">
+                    <div className="flex justify-between w-full mb-4 px-2">
+                        <button onClick={onExit} className="text-slate-500 hover:text-blue-600 font-bold flex items-center"><Icons.Home/> <span className="ml-2">Меню</span></button>
+                        <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-bold">Выучено: {masteredCount}</span>
+                        <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-bold">Осталось: {cards.length}</span>
+                    </div>
+
+                    <div className="relative w-full h-80 perspective cursor-pointer group" onClick={() => setIsFlipped(!isFlipped)}>
+                        <div className={`relative w-full h-full duration-500 preserve-3d transition-all ${isFlipped ? 'rotate-y-180' : ''}`}>
+                            {/* Front */}
+                            <div className="absolute w-full h-full backface-hidden bg-white rounded-3xl shadow-xl flex flex-col items-center justify-center p-8 border-b-4 border-slate-200">
+                                <div className="text-slate-400 text-xs uppercase tracking-widest font-bold mb-6">Глагол</div>
+                                <h2 className="text-3xl font-extrabold text-slate-800 text-center">{currentCard.front}</h2>
+                                <p className="absolute bottom-6 text-slate-400 text-xs animate-pulse">Нажми, чтобы увидеть ответ</p>
+                            </div>
+                            {/* Back */}
+                            <div className="absolute w-full h-full backface-hidden bg-slate-800 text-white rounded-3xl shadow-xl flex flex-col items-center justify-center p-8 rotate-y-180 border-b-4 border-slate-900">
+                                <div className="text-slate-400 text-xs uppercase tracking-widest font-bold mb-6">Управление</div>
+                                <h2 className="text-3xl font-extrabold mb-6 text-center text-yellow-400">{currentCard.back}</h2>
+                                <div className="bg-white/10 p-4 rounded-xl w-full text-center backdrop-blur-sm">
+                                    <p className="italic text-slate-200 text-sm">"{currentCard.example}"</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-8 flex gap-4 w-full">
+                        <button onClick={() => handleRate(false)} className="flex-1 py-4 bg-white border-2 border-red-100 text-red-500 rounded-2xl font-bold hover:bg-red-50 hover:border-red-200 transition-all shadow-sm active:scale-95">
+                            Не знаю (Повторить) 🔄
+                        </button>
+                        <button onClick={() => handleRate(true)} className="flex-1 py-4 bg-green-500 text-white rounded-2xl font-bold hover:bg-green-600 transition-all shadow-lg shadow-green-200 active:scale-95">
+                            Знаю (Убрать) ✅
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        function QuizGame({ blockId, data, onFinish, onExit }) {
+            const questions = data.questions;
+            const [currentQ, setCurrentQ] = useState(0);
+            const [score, setScore] = useState(0);
+            const [showResult, setShowResult] = useState(false);
+            const [selectedOption, setSelectedOption] = useState(null);
+            const [isAnswered, setIsAnswered] = useState(false);
+
+            const handleAnswer = (index) => {
+                if (isAnswered) return;
+                setSelectedOption(index);
+                setIsAnswered(true);
+                if (index === questions[currentQ].correct) setScore(score + 1);
+            };
+
+            const nextQuestion = () => {
+                if (currentQ < questions.length - 1) {
+                    setCurrentQ(currentQ + 1);
+                    setSelectedOption(null);
+                    setIsAnswered(false);
+                } else {
+                    setShowResult(true);
+                }
+            };
+
+            if (showResult) {
+                return (
+                    <div className="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full text-center mx-auto mt-20 animate-fade-in">
+                        <div className="text-6xl mb-4">{score >= 15 ? '🏆' : '📚'}</div>
+                        <h2 className="text-3xl font-bold text-slate-800 mb-2">Блок завершен!</h2>
+                        <div className="text-6xl font-extrabold text-blue-600 mb-4">{score} / {questions.length}</div>
+                        <button onClick={() => onFinish(score)} className="w-full py-3 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-900">В меню</button>
+                    </div>
+                );
+            }
+
+            const question = questions[currentQ];
+
+            return (
+                <div className="w-full max-w-2xl mx-auto animate-fade-in">
+                    <button onClick={onExit} className="mb-4 flex items-center text-slate-500 hover:text-slate-800 font-bold"><Icons.Home/> <span className="ml-2">Меню</span></button>
+                    <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+                        <div className="w-full bg-slate-100 h-2"><div className="bg-blue-500 h-2 transition-all" style={{ width: `${((currentQ + 1) / questions.length) * 100}%` }}></div></div>
+                        <div className="p-8">
+                            <div className="flex justify-between mb-6 text-sm font-bold text-slate-400 uppercase tracking-wider">
+                                <span>Вопрос {currentQ + 1}/{questions.length}</span>
+                                <span>Очки: {score}</span>
+                            </div>
+                            <h3 className="text-2xl font-bold text-slate-800 mb-8 leading-snug">
+                                {question.question.split('______').map((part, i, arr) => (
+                                    <span key={i}>{part}{i < arr.length - 1 && <span className="inline-block min-w-[60px] border-b-2 border-slate-300 mx-1 text-blue-600 text-center relative top-1 px-2">{isAnswered ? (question.options[question.correct] === question.options[selectedOption] ? "" : "") : "?"}</span>}</span>
+                                ))}
+                            </h3>
+                            <div className="space-y-3">
+                                {question.options.map((opt, index) => {
+                                    let style = "bg-slate-50 border-2 border-slate-100 hover:border-blue-300 text-slate-700";
+                                    if (isAnswered) {
+                                        if (index === question.correct) style = "bg-green-100 border-green-500 text-green-900";
+                                        else if (index === selectedOption) style = "bg-red-100 border-red-500 text-red-900";
+                                        else style = "opacity-40";
+                                    }
+                                    return (
+                                        <button key={index} onClick={() => handleAnswer(index)} disabled={isAnswered} className={`w-full p-4 rounded-xl text-left font-medium transition-all flex justify-between items-center ${style}`}>
+                                            {opt}
+                                            {isAnswered && index === question.correct && <Icons.Check/>}
+                                            {isAnswered && index === selectedOption && index !== question.correct && <Icons.X/>}
+                                        </button>
+                                    )
+                                })}
+                            </div>
+                            {isAnswered && (
+                                <div className="mt-6 animate-slide-in">
+                                    <div className="p-4 rounded-xl bg-blue-50 border border-blue-100 text-slate-800 mb-4">
+                                        <span className="font-bold text-blue-600 text-xs uppercase block mb-1">Разбор:</span>
+                                        {question.explanation}
+                                    </div>
+                                    <button onClick={nextQuestion} className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 flex justify-center items-center shadow-lg">Далее</button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const BriefGame = ({ task, onExit }) => {
+            const [userText, setUserText] = useState(task.template);
+            const [showSolution, setShowSolution] = useState(false);
+            return (
+                <div className="w-full max-w-4xl animate-fade-in mx-auto">
+                     <button onClick={onExit} className="mb-4 flex items-center text-slate-500 hover:text-blue-600 transition-colors font-bold"><Icons.Home /> <span className="ml-2">Меню</span></button>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-4">
+                            <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+                                <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center"><Icons.Book/> <span className="ml-2">{task.title}</span></h2>
+                                <div className="bg-blue-50 p-4 rounded-xl mb-4"><p className="text-slate-700">{task.situation}</p></div>
+                                <ul className="list-disc list-inside text-slate-600 ml-2">{task.points.map((p, i) => <li key={i}>{p}</li>)}</ul>
+                            </div>
+                            
+                        </div>
+                        <div className="space-y-4">
+                            <div className="bg-white p-4 rounded-3xl shadow-lg border border-slate-200 flex flex-col h-[400px] relative">
+                                <textarea className="flex-1 w-full p-4 bg-white focus:bg-slate-50 outline-none resize-none font-mono text-sm leading-relaxed text-slate-700" value={userText} onChange={(e) => setUserText(e.target.value)} placeholder="Пишите здесь..."></textarea>
+                            </div>
+                            <button onClick={() => setShowSolution(!showSolution)} className={`w-full py-3 rounded-xl font-bold text-white transition-all flex items-center justify-center shadow-lg ${showSolution ? 'bg-slate-600 hover:bg-slate-700' : 'bg-green-600 hover:bg-green-700'}`}>{showSolution ? 'Скрыть решение' : 'Проверить себя / Показать идеал'}</button>
+                            
+                            {showSolution && (
+                                <div className="bg-green-50 p-6 rounded-3xl border border-green-200 animate-fade-in relative shadow-inner">
+                                    <div className="absolute top-4 right-4 bg-green-200 text-green-800 text-xs font-bold px-2 py-1 rounded">Musterlösung</div>
+                                    <h3 className="font-bold text-green-800 mb-2 flex items-center"><Icons.Check className="w-5 h-5 mr-2"/> Идеальный вариант:</h3>
+                                    <pre className="whitespace-pre-wrap font-mono text-sm text-slate-700 leading-relaxed">{task.solution}</pre>
+                                    
+                                    <div className="mt-6 pt-6 border-t border-green-200">
+                                        <h3 className="font-bold text-yellow-800 mb-3 flex items-center"><Icons.Alert className="w-5 h-5 mr-2"/> Проверь себя:</h3>
+                                        <ul className="space-y-2">{task.checklist.map((item, i) => (<li key={i} className="flex items-start text-slate-700 text-sm"><input type="checkbox" className="mt-1 mr-2 w-4 h-4 accent-green-600 cursor-pointer"/><span>{item}</span></li>))}</ul>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- ГЛАВНОЕ МЕНЮ ---
+        function App() {
+            const [view, setView] = useState('menu'); 
+            const [activeId, setActiveId] = useState(null);
+            const [scores, setScores] = useState({});
+
+            const finish = (id, score) => {
+                setScores(p => ({...p, [id]: Math.max(p[id]||0, score)}));
+                setView('menu');
+            };
+
+            const MenuItem = ({ icon: Icon, title, subtitle, color, onClick, score, total, badge }) => (
+                <button onClick={onClick} className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all text-left group relative overflow-hidden w-full">
+                    <div className={`absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity ${color}`}>
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+                    </div>
+                    <div className="relative z-10 flex flex-col h-full justify-between">
+                        <div className="flex items-start justify-between mb-4">
+                            <div className={`p-3 rounded-2xl ${color} bg-opacity-10 text-${color.split('-')[1]}-600`}>
+                                <Icon />
+                            </div>
+                            {score !== undefined ? (
+                                <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">{score}/{total}</span>
+                            ) : badge && (
+                                <span className="bg-orange-100 text-orange-700 text-xs font-bold px-2 py-1 rounded-full">{badge}</span>
+                            )}
+                        </div>
+                        <div>
+                            <h3 className="font-bold text-lg text-slate-800 group-hover:text-blue-600 leading-tight mb-1">{title}</h3>
+                            <p className="text-xs text-slate-400 font-medium uppercase tracking-wider">{subtitle}</p>
+                        </div>
+                    </div>
+                </button>
+            );
+
+            // Роутинг
+            if (view === 'quiz') return <div className="min-h-screen p-4"><QuizGame blockId={activeId} data={quizData[activeId]} onFinish={(s) => finish(activeId, s)} onExit={() => setView('menu')} /></div>;
+            if (view === 'brief') return <div className="min-h-screen p-4"><BriefGame task={briefData.find(b => b.id === activeId)} onExit={() => setView('menu')} /></div>;
+            if (view === 'flash') return <div className="min-h-screen p-4"><FlashcardsGame onExit={() => setView('menu')} /></div>;
+            if (view === 'reading') return <div className="min-h-screen p-4"><ReadingGame onExit={() => setView('menu')} /></div>;
+
+            return (
+                <div className="min-h-screen p-4 pb-20">
+                    <div className="max-w-5xl w-full mx-auto">
+                        <div className="bg-slate-900 text-white p-8 rounded-3xl shadow-2xl mb-12 relative overflow-hidden">
+                            <div className="relative z-10">
+                                <h1 className="text-3xl md:text-5xl font-extrabold mb-2 tracking-tight">DTZ Profi</h1>
+                                <p className="text-slate-400 text-lg max-w-lg">Ультимативный тренажер для подготовки к экзамену B1. Все 100 вопросов восстановлены.</p>
+                            </div>
+                            <div className="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-blue-600 to-transparent opacity-20"></div>
+                        </div>
+
+                        <div className="grid gap-10">
+                            
+                            <section>
+                                <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center"><span className="bg-blue-100 p-2 rounded-lg mr-3 text-blue-600"><Icons.Check/></span> Тесты (100 Fragen)</h2>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                                    {Object.entries(quizData).map(([k, b]) => (
+                                        <MenuItem key={k} icon={Icons.Check} title={b.title.split(': ')[1]} subtitle={b.title.split(': ')[0]} color="text-blue-600" onClick={() => {setActiveId(k); setView('quiz')}} score={scores[k]} total={20}/>
+                                    ))}
+                                </div>
+                            </section>
+
+                            <section>
+                                <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center"><span className="bg-orange-100 p-2 rounded-lg mr-3 text-orange-600"><Icons.Brain/></span> Навыки (Skills)</h2>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <MenuItem icon={Icons.Read} title="Lesen Verstehen" subtitle="Понимание текстов" color="text-purple-600" onClick={() => setView('reading')} badge="New"/>
+                                    <MenuItem icon={Icons.Brain} title="Flashcards Pro" subtitle="Глаголы + Предлоги" color="text-orange-500" onClick={() => setView('flash')} badge="Updated"/>
+                                </div>
+                            </section>
+
+                            <section>
+                                <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center"><span className="bg-green-100 p-2 rounded-lg mr-3 text-green-600"><Icons.Book/></span> Письмо (Schreiben)</h2>
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                    {briefData.map(b => (
+                                        <MenuItem key={b.id} icon={Icons.Book} title={b.title.split(': ')[1]} subtitle={b.title.split(': ')[0]} color="text-green-600" onClick={() => {setActiveId(b.id); setView('brief')}}/>
+                                    ))}
+                                </div>
+                            </section>
+
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1546 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Yevhenii Korchevskyi - System Architect & DevOps Engineer | Portfolio">
+    <meta name="keywords" content="DevOps, System Architecture, Python, FastAPI, Flutter, AI Integration">
+    <title>Yevhenii Korchevskyi | System Architect & DevOps Engineer</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            
+            /* Light Theme */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f3f4f6;
+            --text-primary: #111827;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            
+            --gradient-1: linear-gradient(135deg, #4f46e5 0%, #818cf8 100%);
+            --gradient-2: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #020617;
+            --bg-secondary: #0f172a;
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --card-bg: rgba(30, 41, 59, 0.4);
+            --nav-bg: rgba(2, 6, 23, 0.95);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Deep Tech background только для dark mode */
+        [data-theme="dark"] body {
+            background-color: #020617;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(79, 70, 229, 0.08), transparent 25%), 
+                radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.05), transparent 25%);
+            background-attachment: fixed;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            letter-spacing: -0.02em;
+            font-weight: 700;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary);
+        }
+
+        /* Theme & Language Switchers */
+        .nav-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .theme-toggle, .lang-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            user-select: none;
+            -webkit-user-select: none;
+            font-family: inherit;
+            font-size: inherit;
+            outline: none;
+            position: relative;
+            z-index: 1001;
+        }
+
+        .theme-toggle:hover, .lang-toggle:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .lang-option {
+            padding: 0.25rem 0.5rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.2s;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .lang-option.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .lang-switch {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lang-switch:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-primary);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                flex-direction: column;
+                background: var(--nav-bg);
+                width: 100%;
+                text-align: center;
+                transition: left 0.3s ease;
+                box-shadow: 0 10px 27px rgba(0, 0, 0, 0.1);
+                padding: 2rem 0;
+                backdrop-filter: blur(10px);
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu li {
+                margin: 1rem 0;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-primary);
+            position: relative;
+            overflow: hidden;
+            padding-top: 80px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease 0.2s backwards;
+        }
+
+        .hero .tagline {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease 0.4s backwards;
+        }
+
+        .hero .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+            animation: fadeInUp 0.8s ease 0.6s backwards;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.8s backwards;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: var(--card-bg);
+            color: var(--primary);
+        }
+
+        .hero-social {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 3rem;
+            animation: fadeInUp 0.8s ease 1s backwards;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        /* Stats Section */
+        .stats {
+            background: var(--card-bg);
+            padding: 4rem 2rem;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.3s ease;
+        }
+
+        .stats-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            transition: color 0.3s ease;
+        }
+
+        /* Services Section */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-1);
+        }
+
+        .service-card:nth-child(2)::before {
+            background: var(--gradient-2);
+        }
+
+        .service-card:nth-child(3)::before {
+            background: var(--gradient-3);
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.3);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white; /* Оставляем white - иконка на цветном фоне */
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-card:nth-child(2) .service-icon {
+            background: var(--gradient-2);
+        }
+
+        .service-card:nth-child(3) .service-icon {
+            background: var(--gradient-3);
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            transition: color 0.3s ease;
+        }
+
+        [data-theme="dark"] .service-card h3 {
+            color: #ffffff;
+        }
+
+        .service-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            transition: color 0.3s ease;
+        }
+
+        [data-theme="dark"] .service-card p {
+            color: #cbd5e1;
+        }
+
+        .service-features {
+            list-style: none;
+            padding: 0;
+        }
+
+        .service-features li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: color 0.3s ease;
+        }
+
+        .service-features li::before {
+            content: '✓';
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Bento Grid Layout - разные размеры карточек */
+        @media (min-width: 768px) {
+            .projects-grid {
+                grid-template-columns: repeat(12, 1fr);
+            }
+
+            .project-card:nth-child(1) {
+                grid-column: span 8;
+                grid-row: span 2;
+            }
+
+            .project-card:nth-child(2) {
+                grid-column: span 4;
+            }
+
+            .project-card:nth-child(3) {
+                grid-column: span 4;
+            }
+
+            .project-card:nth-child(4) {
+                grid-column: span 6;
+            }
+
+            .project-card:nth-child(5) {
+                grid-column: span 6;
+            }
+
+            .project-card:nth-child(6) {
+                grid-column: span 4;
+            }
+
+            .project-card:nth-child(7) {
+                grid-column: span 8;
+            }
+
+            .project-card:nth-child(8) {
+                grid-column: span 12;
+            }
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 
+                0 0 0 1px rgba(0,0,0,0.05),
+                0 4px 6px -1px rgba(0,0,0,0.1),
+                0 2px 4px -1px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 0 0 1px rgba(79, 70, 229, 0.1),
+                0 20px 25px -5px rgba(0,0,0,0.1),
+                0 10px 10px -5px rgba(0,0,0,0.04);
+        }
+
+        /* Spotlight Effect */
+        .project-card::before, .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: inherit;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
+            z-index: 3;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .project-card:hover::before, .service-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-header {
+            padding: 1.5rem 1.5rem 0.5rem;
+            background: transparent;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Project header text - яркий цвет для обеих тем */
+        .project-header,
+        .project-header h3 {
+            color: var(--text-primary);
+        }
+
+        /* Headers with dark backgrounds */
+        .project-header.has-bg,
+        .project-header.has-bg h3,
+        .project-header.has-bg .project-description {
+            color: #ffffff !important;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        /* Для dark mode - еще ярче */
+        [data-theme="dark"] .project-header,
+        [data-theme="dark"] .project-header h3 {
+            color: #ffffff;
+        }
+
+        .project-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        /* Для dark mode - белый текст */
+        [data-theme="dark"] .project-badge {
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.2) !important;
+            font-weight: 700;
+        }
+
+        .project-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .project-card h3 {
+            color: #ffffff;
+        }
+
+        .project-card .project-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        [data-theme="dark"] .project-card .project-description {
+            color: #cbd5e1;
+        }
+
+        .project-body {
+            padding: 1.5rem;
+        }
+
+        .project-body p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            transition: color 0.3s ease;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tech-tag {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .project-link {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .project-link.primary {
+            background: var(--primary);
+            color: white; /* Оставляем - белый на цветной кнопке */
+        }
+
+        .project-link.primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .project-link.secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .project-link.secondary:hover {
+            background: var(--border-color);
+        }
+
+        /* Skills Section */
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-category {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
+
+        .skill-category:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.3);
+        }
+
+        .skill-category h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .skill-category h3 i {
+            color: var(--primary);
+        }
+
+        /* Icon glow только для dark mode */
+        [data-theme="dark"] .skill-category h3 i {
+            text-shadow: 0 0 15px rgba(129, 140, 248, 0.3);
+        }
+
+        .skill-list {
+            list-style: none;
+        }
+
+        .skill-item {
+            padding: 0.75rem 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .skill-item:last-child {
+            border-bottom: none;
+        }
+
+        .skill-item::before {
+            content: '▸';
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Contact Section */
+        .contact {
+            background: white;
+            padding: 6rem 2rem;
+        }
+
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .contact-item {
+            padding: 2rem;
+            background: var(--bg-light);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        .contact-item i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .contact-item:hover i {
+            color: white;
+        }
+
+        .contact-item h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .contact-item a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-item:hover a {
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-dark);
+            color: var(--text-white);
+            padding: 3rem 2rem 1rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-controls {
+                gap: 0.5rem;
+            }
+
+            .theme-toggle, .lang-toggle {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.85rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero .tagline {
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .skills-container {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-info {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scroll Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--primary);
+            z-index: 9999;
+            transition: width 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <i class="fas fa-code"></i>
+                <span data-lang="name">YK</span>
+            </a>
+            
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#services" data-lang="nav-services">Services</a></li>
+                <li><a href="#projects" data-lang="nav-projects">Projects</a></li>
+                <li><a href="#skills" data-lang="nav-skills">Skills</a></li>
+                <li><a href="#contact" data-lang="nav-contact">Contact</a></li>
+                <li>
+                    <select id="langToggle" class="lang-toggle" onchange="setLanguage(this.value)" style="background:transparent; border:1px solid var(--text-primary); color:var(--text-primary); padding:5px 10px; border-radius:5px; cursor:pointer; font-size:14px;">
+                        <option value="en">EN</option>
+                        <option value="de">DE</option>
+                        <option value="ru">RU</option>
+                        <option value="ua">UA</option>
+                    </select>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-map-marker-alt"></i> Essen, Germany
+            </div>
+            <h1>Yevhenii Korchevskyi</h1>
+            <p class="tagline" data-lang="hero-tagline">System Architect & DevOps Engineer</p>
+            <p class="subtitle" data-lang="hero-subtitle">
+                Specializing in enterprise-grade infrastructure, CI/CD automation, and AI integration. 
+                Building scalable systems with modern tech stack and clean architecture.
+            </p>
+            <div class="hero-buttons">
+                <a href="#projects" class="btn btn-primary">
+                    <i class="fas fa-folder-open"></i> <span data-lang="btn-projects">View Projects</span>
+                </a>
+                <a href="assets/documents/lebenslauf-kurz.md" class="btn btn-secondary" download>
+                    <i class="fas fa-download"></i> <span data-lang="btn-cv">Download CV</span>
+                </a>
+            </div>
+            <div class="hero-social">
+                <a href="https://github.com/ANTIANT1" class="social-link" target="_blank">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/yevhenii-korchevskyi-4bb58322b/" class="social-link" target="_blank">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="mailto:xmrcapx@gmail.com" class="social-link">
+                    <i class="fas fa-envelope"></i>
+                </a>
+                <a href="tel:+491709044354" class="social-link">
+                    <i class="fas fa-phone"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-number">10+</span>
+                <span class="stat-label" data-lang="stat-projects">Completed Projects</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">15+</span>
+                <span class="stat-label" data-lang="stat-tech">Technologies</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">B1→B2</span>
+                <span class="stat-label" data-lang="stat-german">German Language</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" data-lang="stat-degree">M.Sc.</span>
+                <span class="stat-label">Civil Engineering</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services">
+        <div class="section-header">
+            <div class="section-badge" data-lang="services-badge">What I Offer</div>
+            <h2 class="section-title" data-lang="services-title">Professional Services</h2>
+            <p class="section-subtitle" data-lang="services-subtitle">
+                Freelance engineering services for B2B clients in Germany (NRW region)
+            </p>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-server"></i>
+                </div>
+                <h3 data-lang="service-1-title">System Architecture & DevOps</h3>
+                <p data-lang="service-1-desc">Design and implementation of CI/CD pipelines, containerization, and infrastructure automation.</p>
+                <ul class="service-features">
+                    <li data-lang="service-1-li-1">Docker & Kubernetes setup</li>
+                    <li data-lang="service-1-li-2">GitHub Actions / GitLab CI</li>
+                    <li data-lang="service-1-li-3">Backend API development (FastAPI, NestJS)</li>
+                    <li data-lang="service-1-li-4">Database architecture (SQL/NoSQL)</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-camera"></i>
+                </div>
+                <h3 data-lang="service-2-title">Real Estate Visualization</h3>
+                <p data-lang="service-2-desc">Professional photography and 360° virtual tours for real estate marketing.</p>
+                <ul class="service-features">
+                    <li data-lang="service-2-li-1">Interior & exterior photography</li>
+                    <li data-lang="service-2-li-2">360° virtual tours (interactive)</li>
+                    <li data-lang="service-2-li-3">Video tours with music & text</li>
+                    <li data-lang="service-2-li-4">Drone footage (planned: A2 license)</li>
+                </ul>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3 data-lang="service-3-title">AI Integration & Automation</h3>
+                <p data-lang="service-3-desc">Multi-LLM integration, intelligent automation pipelines, and custom AI-powered solutions.</p>
+                <ul class="service-features">
+                    <li data-lang="service-3-li-1">Multi-LLM Integration (OpenAI, Claude, Gemini)</li>
+                    <li data-lang="service-3-li-2">Custom MCP servers for AI workflows</li>
+                    <li data-lang="service-3-li-3">Document processing pipelines (ETL)</li>
+                    <li data-lang="service-3-li-4">Webhook automation (n8n, Zapier)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects">
+        <div class="section-header">
+            <div class="section-badge" data-lang="projects-badge">Portfolio</div>
+            <h2 class="section-title" data-lang="projects-title">Featured Projects</h2>
+            <p class="section-subtitle" data-lang="projects-subtitle">
+                Real-world projects demonstrating technical expertise and problem-solving skills
+            </p>
+        </div>
+
+        <div class="projects-grid">
+            <!-- DreamVerse -->
+            <div class="project-card">
+                <div class="project-header">
+                    <div class="project-badge"><i class="fas fa-globe"></i> Next-Gen Sandbox MMORPG</div>
+                    <h3>DreamVerse</h3>
+                    <p class="project-description" data-lang="dreamverse-desc">The first AI-native game where players become architects of reality itself</p>
+                </div>
+                <div class="project-body">
+                    <div class="project-tech">
+                        <span class="tech-tag">Unreal Engine 5.7</span>
+                        <span class="tech-tag">GPT-4o</span>
+                        <span class="tech-tag">GraphRAG</span>
+                        <span class="tech-tag">ERC-6551</span>
+                        <span class="tech-tag">Polygon zkEVM</span>
+                    </div>
+                    
+                    <p data-lang="dreamverse-p1"><strong>Revolutionary Game Design:</strong> No classes, no pre-defined roles. Your identity is defined by what you hold—weapons are programmable platforms with memory slots for skills (NFT-based). Design your own weapon forms through AI "Demiurge" system, from Heavy Souls-like builds to GunZ K-Style speedsters. Physics adapts to your equipment load: <30% = air-strafe mobility, >70% = tank poise.</p>
+                    
+                    <p data-lang="dreamverse-p2"><strong>Living World Economy:</strong> Hexagonal land NFT system with territorial DAO governance. Players own plots, build infrastructure, mine resources, and tax trade routes. Procedural generation creates endless biomes. Wave-based expansion unlocks new continents (Genesis → Frontier → Abyss → Void).</p>
+                    
+                    <p data-lang="dreamverse-p3"><strong>Autonomous NPCs with Real Memory:</strong> "Living NPC Protocol" using ERC-6551 token-bound accounts + GraphRAG synaptic memory. NPCs remember conversations, form relationships, make autonomous decisions. Tier 3 "Awakened" NPCs can interact with Twitter/Discord and conduct real-world transactions. 5 archetypes: Quantum Trader, Defense Commander, World Builder, Intelligence Agent, Diplomat.</p>
+                    
+                    <p data-lang="dreamverse-p4"><strong>Technical Innovation:</strong> Hybrid architecture—UE5 rendering + Python FastAPI "Demiurge" orchestrator generating content via LLM. Custom MCP integration with 21 editor automation commands. Knowledge Graph with 185 nodes forming synaptic connections for NPC memory persistence. AI balance validator ensures generated weapons maintain competitive integrity.</p>
+                    
+                    <p data-lang="dreamverse-p5"><strong>Vision:</strong> Merging FromSoftware's combat depth (Elden Ring verticality + Sekiro flow + Bloodborne aggression) with player-driven economy and AI co-creation. Not a game you play—a world you build.</p>
+                    
+                    <div class="project-links">
+                        <a href="projects/01-dreamverse/index.html" class="project-link primary" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> <span data-lang="btn-explore">Explore World</span>
+                        </a>
+                        <a href="https://github.com/ANTIANT1" class="project-link secondary" target="_blank">
+                            <i class="fab fa-github"></i> <span data-lang="btn-docs">Technical Docs</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NeuroDrive -->
+            <div class="project-card">
+                <div class="project-header has-bg" style="background: var(--gradient-2);">
+                    <div class="project-badge"><i class="fas fa-network-wired"></i> AI & Automation</div>
+                    <h3>NeuroDrive</h3>
+                    <p class="project-description" data-lang="neurodrive-desc">ETL pipeline with AI-powered document processing</p>
+                </div>
+                <div class="project-body">
+                    <div class="project-tech">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Google Drive API</span>
+                        <span class="tech-tag">OpenAI API</span>
+                        <span class="tech-tag">n8n</span>
+                    </div>
+                    <p data-lang="neurodrive-text">Automated Google Drive to Obsidian pipeline with AI categorization, smart title generation, and webhook automation. 1000+ documents processed.</p>
+                    <div class="project-links">
+                        <a href="projects/neurodrive.html" class="project-link primary" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> <span data-lang="btn-landing">View Landing</span>
+                        </a>
+                        <a href="https://github.com/ANTIANT1" class="project-link secondary" target="_blank">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JETZWORK -->
+            <div class="project-card">
+                <div class="project-header has-bg" style="background: var(--gradient-3);">
+                    <div class="project-badge"><i class="fas fa-mobile-screen"></i> Mobile App</div>
+                    <h3>JETZWORK</h3>
+                    <p class="project-description" data-lang="jetzwork-desc">B2B marketplace mobile application</p>
+                </div>
+                <div class="project-body">
+                    <div class="project-tech">
+                        <span class="tech-tag">Flutter</span>
+                        <span class="tech-tag">Firebase</span>
+                        <span class="tech-tag">BLoC Pattern</span>
+                        <span class="tech-tag">Google Maps</span>
+                    </div>
+                    <p data-lang="jetzwork-text">Cross-platform B2B marketplace with GPS-based time tracking (ArbZG compliant), 3-tier verification system, and real-time Firebase backend.</p>
+                    <div class="project-links">
+                        <a href="projects/03-jetzwork/index.html" class="project-link primary" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> <span data-lang="btn-landing">View Landing</span>
+                        </a>
+                        <a href="https://github.com/ANTIANT1" class="project-link secondary" target="_blank">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LiD Trainer -->
+            <div class="project-card">
+                <div class="project-header">
+                    <div class="project-badge"><i class="fas fa-book-open"></i> German Education</div>
+                    <h3>LiD Trainer</h3>
+                    <p class="project-description" data-lang="lid-desc">Leben in Deutschland exam preparation</p>
+                </div>
+                <div class="project-body">
+                    <div class="project-tech">
+                        <span class="tech-tag">React 18</span>
+                        <span class="tech-tag">TailwindCSS</span>
+                        <span class="tech-tag">Babel</span>
+                    </div>
+                    <p data-lang="lid-text">Interactive trainer for German citizenship test with roulette mode (instant feedback) and full exam simulation. All 33 questions with explanations.</p>
+                    <div class="project-links">
+                        <a href="projects/08-lid-trainer/index.html" class="project-link primary" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> <span data-lang="btn-demo">Try Demo</span>
+                        </a>
+                        <a href="https://github.com/ANTIANT1" class="project-link secondary" target="_blank">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DTZ Trainer -->
+            <div class="project-card">
+                <div class="project-header has-bg" style="background: var(--gradient-2);">
+                    <div class="project-badge"><i class="fas fa-graduation-cap"></i> Education</div>
+                    <h3>DTZ Trainer</h3>
+                    <p class="project-description" data-lang="dtz-desc">Interactive German language exam trainer</p>
+                </div>
+                <div class="project-body">
+                    <div class="project-tech">
+                        <span class="tech-tag">React 18</span>
+                        <span class="tech-tag">TailwindCSS</span>
+                        <span class="tech-tag">JavaScript</span>
+                    </div>
+                    <p data-lang="dtz-text">Interactive trainer for DTZ B1 German exam with 4 grammar modules, 100+ practice questions, and responsive design.</p>
+                    <div class="project-links">
+                        <a href="projects/06-dtz-trainer/index.html" class="project-link primary" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> <span data-lang="btn-demo">Try Demo</span>
+                        </a>
+                        <a href="https://github.com/ANTIANT1" class="project-link secondary" target="_blank">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cannabis Clubs -->
+            <div class="project-card">
+                <div class="project-header" style="background: var(--gradient-3);">
+                    <div class="project-badge"><i class="fas fa-scale-balanced"></i> LegalTech</div>
+                    <h3>Cannabis Clubs Ecosystem</h3>
+                    <p class="project-description" data-lang="cannabis-desc">SaaS for Cannabis Social Clubs compliance</p>
+                </div>
+                <div class="project-body">
+                    <div class="project-tech">
+                        <span class="tech-tag">HTML5</span>
+                        <span class="tech-tag">TailwindCSS</span>
+                        <span class="tech-tag">Chart.js</span>
+                        <span class="tech-tag">GDPR</span>
+                    </div>
+                    <p data-lang="cannabis-text">Digital infrastructure for Cannabis Social Clubs with KCanG and GDPR compliance, automated limit monitoring, and analytics dashboard.</p>
+                    <div class="project-links">
+                        <a href="projects/07-cannabis-clubs/index.html" class="project-link primary" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> <span data-lang="btn-landing">View Landing</span>
+                        </a>
+                        <a href="https://github.com/ANTIANT1" class="project-link secondary" target="_blank">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ContentFlow -->
+            <div class="project-card">
+                <div class="project-header">
+                    <div class="project-badge"><i class="fas fa-layer-group"></i> AI Content Hub</div>
+                    <h3>ContentFlow</h3>
+                    <p class="project-description" data-lang="contentflow-desc">AI-Powered Cross-Platform CMS</p>
+                </div>
+                <div class="project-body">
+                    <div class="project-tech">
+                        <span class="tech-tag">Flutter Desktop</span>
+                        <span class="tech-tag">Python Flask</span>
+                        <span class="tech-tag">Gemini AI</span>
+                        <span class="tech-tag">BLoC / Clean Arch</span>
+                    </div>
+                    
+                    <p data-lang="contentflow-p1"><strong>Enterprise Core:</strong> Cross-platform Clean Architecture (BLoC) app for Windows/macOS/Linux/Web. Features robust CI/CD pipelines (GitHub Actions), 85% test coverage, and optimized Hive local storage.</p>
+                    
+                    <p data-lang="contentflow-p2"><strong>AI & Features:</strong> Gemini AI engine for instant content generation (scripts, posts) via Python Flask. Includes real-time Analytics Dashboard, Kanban task management, and rich media handling.</p>
+
+                    <div class="project-links">
+                        <a href="https://github.com/ANTIANT1" class="project-link primary" target="_blank">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                        <a href="#" class="project-link secondary">
+                            <span data-lang="btn-details">Details</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills">
+        <div class="section-header">
+            <div class="section-badge" data-lang="skills-badge">Tech Stack</div>
+            <h2 class="section-title" data-lang="skills-title">Technical Competencies</h2>
+            <p class="section-subtitle" data-lang="skills-subtitle">
+                Real-world experience with modern technologies and frameworks
+            </p>
+        </div>
+
+        <div class="skills-container">
+            <div class="skill-category">
+                <h3><i class="fas fa-server"></i> <span data-lang="skill-backend-title">Backend & DevOps</span></h3>
+                <ul class="skill-list">
+                    <li data-lang="skill-backend-1">Python FastAPI (DreamVerse, NeuroDrive)</li>
+                    <li data-lang="skill-backend-2">NestJS / Node.js (StartKlar)</li>
+                    <li data-lang="skill-backend-3">Docker Compose (planned deployments)</li>
+                    <li data-lang="skill-backend-4">REST API & WebSocket (TCP)</li>
+                    <li data-lang="skill-backend-5">SQLite, Firebase Firestore, Hive</li>
+                </ul>
+            </div>
+
+            <div class="skill-category">
+                <h3><i class="fas fa-robot"></i> <span data-lang="skill-ai-title">AI Integration & Automation</span></h3>
+                <ul class="skill-list">
+                    <li data-lang="skill-ai-1">Multi-LLM Integration: OpenAI GPT-4o, Anthropic Claude, Google Gemini</li>
+                    <li data-lang="skill-ai-2">Custom MCP Protocol servers (21+ tools for Unreal Engine)</li>
+                    <li data-lang="skill-ai-3">Google Drive API OAuth2 + ETL pipelines</li>
+                    <li data-lang="skill-ai-4">n8n & Zapier Webhook automation</li>
+                    <li data-lang="skill-ai-5">Prompt Engineering & System Prompts optimization</li>
+                </ul>
+            </div>
+
+            <div class="skill-category">
+                <h3><i class="fas fa-mobile-alt"></i> <span data-lang="skill-app-title">Application Development</span></h3>
+                <ul class="skill-list">
+                    <li data-lang="skill-app-1">Flutter (Mobile + Desktop)</li>
+                    <li data-lang="skill-app-2">React 18 + TailwindCSS</li>
+                    <li data-lang="skill-app-3">BLoC Pattern, Provider, GetIt DI</li>
+                    <li data-lang="skill-app-4">Firebase Stack (Auth, Firestore)</li>
+                    <li data-lang="skill-app-5">Unreal Engine 5 (Blueprints + Python)</li>
+                </ul>
+            </div>
+
+            <div class="skill-category">
+                <h3><i class="fas fa-code"></i> <span data-lang="skill-lang-title">Programming Languages</span></h3>
+                <ul class="skill-list">
+                    <li data-lang="skill-lang-1">Python (FastAPI, ETL, Async)</li>
+                    <li data-lang="skill-lang-2">Dart (Flutter Apps)</li>
+                    <li data-lang="skill-lang-3">JavaScript/TypeScript (React, Node.js)</li>
+                    <li data-lang="skill-lang-4">C++ (Unreal Engine 5 Helpers)</li>
+                    <li data-lang="skill-lang-5">SQL (SQLite, Firestore Patterns)</li>
+                </ul>
+            </div>
+
+            <div class="skill-category">
+                <h3><i class="fas fa-camera"></i> <span data-lang="skill-content-title">Content Production</span></h3>
+                <ul class="skill-list">
+                    <li data-lang="skill-content-1">DSLR/Mirrorless Photography</li>
+                    <li data-lang="skill-content-2">360° Virtual Tours</li>
+                    <li data-lang="skill-content-3">DaVinci Resolve, Premiere Pro</li>
+                    <li data-lang="skill-content-4">Lightroom, Photoshop</li>
+                    <li data-lang="skill-content-5">Real Estate Photography</li>
+                </ul>
+            </div>
+
+            <div class="skill-category">
+                <h3><i class="fas fa-drafting-compass"></i> <span data-lang="skill-eng-title">Engineering</span></h3>
+                <ul class="skill-list">
+                    <li data-lang="skill-eng-1">M.Sc. Civil Engineering (Odessa)</li>
+                    <li data-lang="skill-eng-2">AutoCAD, Revit (BIM)</li>
+                    <li data-lang="skill-eng-3">Blender (Basic 3D Modeling)</li>
+                    <li data-lang="skill-eng-4">Technical Documentation</li>
+                    <li data-lang="skill-eng-5">FEM, CFD Simulation</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="contact-container">
+            <div class="section-header">
+                <div class="section-badge" data-lang="contact-badge">Get In Touch</div>
+                <h2 class="section-title" data-lang="contact-title">Let's Work Together</h2>
+                <p class="section-subtitle" data-lang="contact-subtitle">
+                    Available for freelance projects in Essen, NRW region. 
+                    German B1 certified (B2 in progress).
+                </p>
+            </div>
+
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <h3 data-lang="contact-email">Email</h3>
+                    <a href="mailto:ykuastudio@gmail.com">ykuastudio@gmail.com</a>
+                </div>
+
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <h3 data-lang="contact-phone">Phone</h3>
+                    <a href="tel:+491709044354">+49 170 9044354</a>
+                </div>
+
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3 data-lang="contact-location">Location</h3>
+                    <p data-lang="contact-location-val">Essen, NRW<br>Germany</p>
+                </div>
+
+                <div class="contact-item">
+                    <i class="fas fa-language"></i>
+                    <h3 data-lang="contact-languages">Languages</h3>
+                    <p data-lang="contact-languages-val">German B1→B2<br>English C1<br>Russian Native<br>Ukrainian Native</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-social">
+                <a href="https://github.com/ANTIANT1" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/yevhenii-korchevskyi-4bb58322b/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="mailto:ykuastudio@gmail.com"><i class="fas fa-envelope"></i></a>
+                <a href="tel:+491709044354"><i class="fas fa-phone"></i></a>
+            </div>
+
+            <div class="footer-bottom">
+                <p data-lang="footer-rights">&copy; 2026 Yevhenii Korchevskyi. All rights reserved.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem;" data-lang="footer-role">
+                    System Architect & DevOps Engineer | Essen, Germany
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

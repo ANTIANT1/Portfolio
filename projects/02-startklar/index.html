@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L2 Mastermind Ecosystem</title>
+    
+    <!-- Tailwind CSS (via CDN for immediate usage) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'gradient-x': 'gradient-x 15s ease infinite',
+                        'blob': 'blob 7s infinite',
+                        'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        'gradient-x': {
+                            '0%, 100%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            },
+                        },
+                        blob: {
+                            "0%": { transform: "translate(0px, 0px) scale(1)" },
+                            "33%": { transform: "translate(30px, -50px) scale(1.1)" },
+                            "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
+                            "100%": { transform: "translate(0px, 0px) scale(1)" }
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Utilities */
+        .glass-nav {
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+        body {
+            background-color: #020617;
+            color: #f8fafc;
+        }
+        ::selection {
+            background-color: #8b5cf6;
+            color: white;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden antialiased selection:bg-purple-500 selection:text-white">
+
+    <!-- Background Ambience -->
+    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150"></div>
+        <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-900/20 blur-[120px] animate-blob"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-900/10 blur-[120px] animate-blob animation-delay-2000"></div>
+        <div class="absolute top-[40%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 w-[40%] h-[40%] rounded-full bg-purple-900/10 blur-[100px] animate-blob animation-delay-4000"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-6">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-3 cursor-pointer group">
+                <div class="relative w-10 h-10 flex items-center justify-center">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-purple-600 to-blue-600 rounded-xl blur opacity-70 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="relative w-10 h-10 bg-[#0F172A] border border-white/10 rounded-xl flex items-center justify-center">
+                        <i data-lucide="cpu" class="text-white w-5 h-5"></i>
+                    </div>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xl font-bold tracking-tight leading-none">L2 <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">Mastermind</span></span>
+                    <span class="text-[10px] text-slate-500 font-mono tracking-widest uppercase">Ecosystem v3.0</span>
+                </div>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                <a href="#concept" class="hover:text-white hover:scale-105 transition-all">Концепция</a>
+                <a href="#modules" class="hover:text-white hover:scale-105 transition-all">Модули</a>
+                <a href="#roadmap" class="hover:text-white hover:scale-105 transition-all">Roadmap</a>
+                <button class="relative group px-6 py-2.5 bg-white text-slate-950 rounded-lg font-bold overflow-hidden">
+                    <span class="relative z-10 group-hover:text-white transition-colors">Получить доступ</span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </button>
+            </div>
+
+            <!-- Mobile Toggle -->
+            <button id="mobile-menu-btn" class="md:hidden text-white p-2">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-40 bg-[#020617]/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8 md:hidden opacity-0 pointer-events-none transition-opacity duration-300">
+        <button id="close-menu-btn" class="absolute top-6 right-6 text-white p-2">
+            <i data-lucide="x"></i>
+        </button>
+        <a href="#concept" class="mobile-link text-2xl font-bold text-white">Концепция</a>
+        <a href="#modules" class="mobile-link text-2xl font-bold text-white">Модули</a>
+        <a href="#roadmap" class="mobile-link text-2xl font-bold text-white">Roadmap</a>
+        <button class="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg font-bold text-lg text-white">
+            Начать сейчас
+        </button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative z-10 pt-40 pb-20 md:pt-52 md:pb-32 container mx-auto px-6 text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-sm animate-fade-in-up">
+            <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span class="text-xs font-medium text-slate-300 tracking-wide">Visionary Edition 3.0</span>
+        </div>
+        
+        <h1 class="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight mb-8 leading-[1.1] text-white">
+            Создай свой мир <br class="hidden md:block"/>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400">Lineage 2</span>
+            <br />
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-emerald-500 animate-gradient-x text-glow">
+                Без кода. Без барьеров.
+            </span>
+        </h1>
+        
+        <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-12 leading-relaxed">
+            Мы делаем для L2 то, что <span class="text-white font-semibold">Tilda</span> сделала для веба, а <span class="text-white font-semibold">Roblox</span> — для геймдева. 
+            Защищай доходы, автоматизируй рутину и твори.
+        </p>
+
+        <div class="flex flex-col md:flex-row items-center justify-center gap-5">
+            <a href="#modules" class="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl font-bold text-lg text-white shadow-[0_0_40px_-10px_rgba(124,58,237,0.5)] hover:shadow-[0_0_60px_-10px_rgba(124,58,237,0.6)] transition-all hover:-translate-y-1 flex items-center justify-center gap-2">
+                Исследовать экосистему <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </a>
+            <button class="w-full md:w-auto px-8 py-4 bg-[#0F172A] border border-white/10 hover:border-white/20 hover:bg-white/5 rounded-xl font-bold text-lg text-white transition-all flex items-center justify-center gap-2 group">
+                <i data-lucide="terminal" class="w-5 h-5 text-slate-500 group-hover:text-white transition-colors"></i>
+                Смотреть демо
+            </button>
+        </div>
+
+        <!-- Hero Stats -->
+        <div class="mt-24 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <!-- Stat 1 -->
+            <div class="p-6 rounded-2xl bg-[#0F172A]/50 border border-white/5 backdrop-blur-sm transition-all duration-300 group hover:border-orange-500/50">
+                <div class="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <i data-lucide="shield" class="w-6 h-6 text-orange-500"></i>
+                </div>
+                <h3 class="font-bold text-lg text-white mb-2">Защита доходов</h3>
+                <p class="text-sm text-slate-400">Anti-RMT система нового поколения</p>
+            </div>
+            <!-- Stat 2 -->
+            <div class="p-6 rounded-2xl bg-[#0F172A]/50 border border-white/5 backdrop-blur-sm transition-all duration-300 group hover:border-purple-500/50">
+                <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <i data-lucide="bot" class="w-6 h-6 text-purple-500"></i>
+                </div>
+                <h3 class="font-bold text-lg text-white mb-2">AI Поддержка</h3>
+                <p class="text-sm text-slate-400">Oracle заменяет целый отдел саппорта</p>
+            </div>
+            <!-- Stat 3 -->
+            <div class="p-6 rounded-2xl bg-[#0F172A]/50 border border-white/5 backdrop-blur-sm transition-all duration-300 group hover:border-emerald-500/50">
+                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                    <i data-lucide="globe" class="w-6 h-6 text-emerald-500"></i>
+                </div>
+                <h3 class="font-bold text-lg text-white mb-2">No-Code Создание</h3>
+                <p class="text-sm text-slate-400">Редактор мира в стиле Roblox</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Concept Section -->
+    <section id="concept" class="py-24 bg-[#0B1120] relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                <div class="lg:w-1/2 space-y-8">
+                    <div class="inline-block px-3 py-1 bg-blue-500/10 rounded-md text-blue-400 text-xs font-bold uppercase tracking-wider">
+                        Философия
+                    </div>
+                    <h2 class="text-3xl md:text-5xl font-bold leading-tight text-white">
+                        Мы меняем правила игры <br/>
+                        <span class="text-slate-500">на рынке Lineage 2.</span>
+                    </h2>
+                    <p class="text-slate-400 text-lg leading-relaxed">
+                        Индустрия застряла в прошлом: сложная настройка Java, бесконечные SQL-запросы и ручной мониторинг FunPay.
+                        Мы предлагаем единую экосистему для двух аудиторий.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                        <div class="p-6 rounded-xl bg-[#151e32] border border-white/5 hover:border-blue-500/30 transition-colors">
+                            <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center mb-4">
+                                <i data-lucide="trending-up" class="w-5 h-5 text-blue-400"></i>
+                            </div>
+                            <h4 class="font-bold text-white text-lg mb-2">B2B: Здесь и сейчас</h4>
+                            <p class="text-sm text-slate-400">
+                                Инструменты для профессиональных админов. <span class="text-blue-300">Aegis</span> защищает деньги, <span class="text-purple-300">Oracle</span> снижает расходы на персонал.
+                            </p>
+                        </div>
+                        
+                        <div class="p-6 rounded-xl bg-[#151e32] border border-white/5 hover:border-emerald-500/30 transition-colors">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center mb-4">
+                                <i data-lucide="zap" class="w-5 h-5 text-emerald-400"></i>
+                            </div>
+                            <h4 class="font-bold text-white text-lg mb-2">B2C: Будущее</h4>
+                            <p class="text-sm text-slate-400">
+                                Демократизация разработки. <span class="text-emerald-300">Genesis</span> позволяет создать свой сервер «мышкой» за 5 минут.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Code Mockup -->
+                <div class="lg:w-1/2 relative">
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 blur-3xl opacity-20 transform rotate-6"></div>
+                    <div class="relative bg-[#0F172A] border border-slate-700/50 rounded-xl shadow-2xl overflow-hidden group">
+                        <div class="bg-[#1E293B] px-4 py-3 flex items-center gap-2 border-b border-slate-700/50">
+                            <div class="flex gap-1.5">
+                                <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                            </div>
+                            <div class="ml-4 px-3 py-1 bg-[#0F172A] rounded text-xs text-slate-400 font-mono flex items-center gap-2 w-full max-w-[200px]">
+                                <i data-lucide="lock" class="w-3 h-3"></i> master_console
+                            </div>
+                        </div>
+                        
+                        <div class="p-6 font-mono text-sm space-y-4">
+                            <div class="flex gap-3">
+                                <span class="text-slate-500 select-none">01</span>
+                                <div><span class="text-purple-400">import</span> <span class="text-white">L2_Ecosystem</span></div>
+                            </div>
+                            <div class="flex gap-3">
+                                <span class="text-slate-500 select-none">02</span>
+                                <div><span class="text-blue-400">class</span> <span class="text-yellow-400">Server</span> <span class="text-slate-300">{</span></div>
+                            </div>
+                            <div class="flex gap-3">
+                                <span class="text-slate-500 select-none">03</span>
+                                <div><span class="text-slate-300 pl-4">security = </span> <span class="text-orange-400">new Aegis("Active");</span></div>
+                            </div>
+                            <div class="flex gap-3">
+                                <span class="text-slate-500 select-none">04</span>
+                                <div><span class="text-slate-300 pl-4">support = </span> <span class="text-purple-400">new Oracle("GPT-4o");</span></div>
+                            </div>
+                            <div class="flex gap-3">
+                                <span class="text-slate-500 select-none">05</span>
+                                <div><span class="text-slate-300 pl-4">world = </span> <span class="text-emerald-400">Genesis.create("Interlude");</span></div>
+                            </div>
+                            <div class="flex gap-3">
+                                <span class="text-slate-500 select-none">06</span>
+                                <span class="text-slate-300">}</span>
+                            </div>
+                            <div class="flex gap-3 pt-2">
+                                <span class="text-slate-500 select-none">07</span>
+                                <span class="text-emerald-500 animate-pulse">$ System ready. Waiting for commands..._</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#1E293B] px-4 py-2 border-t border-slate-700/50 flex justify-between text-xs font-mono">
+                            <div class="flex gap-4">
+                                <span class="text-emerald-400 flex items-center gap-1"><i data-lucide="activity" class="w-3 h-3"></i> Online</span>
+                                <span class="text-blue-400">Ping: 2ms</span>
+                            </div>
+                            <span class="text-slate-500">UTF-8</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modules Section -->
+    <section id="modules" class="py-24 container mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6 text-white">Экосистема 360°</h2>
+            <p class="text-slate-400 max-w-2xl mx-auto text-lg">
+                Полный цикл жизни сервера: от защиты финансов до креативного созидания.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-8">
+            
+            <!-- Aegis Module -->
+            <div class="group relative rounded-3xl overflow-hidden bg-[#0F172A] border border-white/5 hover:border-orange-500/50 transition-all duration-500">
+                <div class="absolute inset-0 bg-gradient-to-r from-orange-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div class="grid lg:grid-cols-2 gap-12 p-8 lg:p-12 items-center relative z-10">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 text-xs font-bold uppercase tracking-wider mb-6 border border-orange-500/20">
+                            Cash Cow Module
+                        </div>
+                        <h3 class="text-4xl font-bold mb-4 flex items-center gap-4 text-white">
+                            <i data-lucide="shield" class="w-10 h-10 text-orange-500"></i> Aegis <span class="text-2xl text-slate-500 font-normal">Guardian Suite</span>
+                        </h3>
+                        <p class="text-slate-300 mb-8 text-lg leading-relaxed">
+                            Финансовый щит вашего проекта. Aegis не просто банит ботов, он отслеживает потоки RMT (Real Money Trading), сохраняя прибыль сервера.
+                        </p>
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-start gap-4">
+                                <div class="mt-1 w-6 h-6 rounded-full bg-orange-500/20 flex items-center justify-center shrink-0">
+                                    <i data-lucide="check-circle" class="w-3.5 h-3.5 text-orange-400"></i>
+                                </div>
+                                <div>
+                                    <strong class="text-white block">RMT Tracker</strong>
+                                    <span class="text-slate-400 text-sm">Парсинг FunPay и сопоставление лотов с базой игроков.</span>
+                                </div>
+                            </li>
+                            <li class="flex items-start gap-4">
+                                <div class="mt-1 w-6 h-6 rounded-full bg-orange-500/20 flex items-center justify-center shrink-0">
+                                    <i data-lucide="check-circle" class="w-3.5 h-3.5 text-orange-400"></i>
+                                </div>
+                                <div>
+                                    <strong class="text-white block">Bot Hunter</strong>
+                                    <span class="text-slate-400 text-sm">Анализ таймингов и невидимые NPC-ловушки.</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="relative h-[400px] bg-slate-900 rounded-2xl border border-white/10 p-6 flex flex-col items-center justify-center overflow-hidden shadow-2xl">
+                         <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(249,115,22,0.15),transparent_70%)]"></div>
+                         
+                         <div class="relative w-64 h-64 border-2 border-orange-500/30 rounded-full flex items-center justify-center animate-[spin_10s_linear_infinite]">
+                            <div class="absolute top-0 w-2 h-2 bg-orange-500 rounded-full shadow-[0_0_15px_rgba(249,115,22,1)]"></div>
+                            <div class="w-48 h-48 border border-orange-500/20 rounded-full"></div>
+                            <div class="w-32 h-32 border border-orange-500/20 rounded-full"></div>
+                         </div>
+                         
+                         <div class="absolute inset-0 flex items-center justify-center">
+                            <i data-lucide="shield" class="w-16 h-16 text-orange-500 drop-shadow-[0_0_15px_rgba(249,115,22,0.5)]"></i>
+                         </div>
+
+                         <div class="absolute bottom-6 left-6 right-6 bg-slate-800/80 backdrop-blur border border-red-500/30 rounded-lg p-3 flex items-center gap-3 animate-pulse">
+                            <div class="w-8 h-8 rounded bg-red-500/20 flex items-center justify-center text-red-500">
+                                <i data-lucide="lock" class="w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <div class="text-red-400 text-xs font-bold uppercase">Security Alert</div>
+                                <div class="text-white text-xs">Suspicious transfer: 250kk Adena detected</div>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Oracle Module -->
+            <div class="group relative rounded-3xl overflow-hidden bg-[#0F172A] border border-white/5 hover:border-purple-500/50 transition-all duration-500">
+                <div class="absolute inset-0 bg-gradient-to-l from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div class="grid lg:grid-cols-2 gap-12 p-8 lg:p-12 items-center lg:flex-row-reverse relative z-10">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-bold uppercase tracking-wider mb-6 border border-purple-500/20">
+                            Key Differentiator
+                        </div>
+                        <h3 class="text-4xl font-bold mb-4 flex items-center gap-4 text-white">
+                            <i data-lucide="bot" class="w-10 h-10 text-purple-500"></i> Oracle <span class="text-2xl text-slate-500 font-normal">AI Agent</span>
+                        </h3>
+                        <p class="text-slate-300 mb-8 text-lg leading-relaxed">
+                            Ваш идеальный сотрудник. Работает 24/7, не просит зарплату и знает о сервере всё. Oracle развлекает игроков и решает их проблемы.
+                        </p>
+                        <ul class="space-y-4 mb-8">
+                             <li class="flex items-start gap-4">
+                                <div class="mt-1 w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center shrink-0">
+                                    <i data-lucide="check-circle" class="w-3.5 h-3.5 text-purple-400"></i>
+                                </div>
+                                <div>
+                                    <strong class="text-white block">L2 Slang Model</strong>
+                                    <span class="text-slate-400 text-sm">Понимает сленг: «соски», «нубл», «регрупп».</span>
+                                </div>
+                            </li>
+                             <li class="flex items-start gap-4">
+                                <div class="mt-1 w-6 h-6 rounded-full bg-purple-500/20 flex items-center justify-center shrink-0">
+                                    <i data-lucide="check-circle" class="w-3.5 h-3.5 text-purple-400"></i>
+                                </div>
+                                <div>
+                                    <strong class="text-white block">RAG System</strong>
+                                    <span class="text-slate-400 text-sm">Мгновенно отвечает на вопросы по Wiki.</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="relative h-[400px] bg-slate-900 rounded-2xl border border-white/10 p-6 flex flex-col overflow-hidden shadow-2xl">
+                         <div class="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(168,85,247,0.15),transparent_70%)]"></div>
+                         
+                         <div class="flex-1 flex flex-col justify-end space-y-4 z-10">
+                            <div class="flex gap-3">
+                                <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold">PL</div>
+                                <div class="bg-slate-800 p-3 rounded-2xl rounded-tl-none border border-white/5 text-slate-300 text-sm max-w-[80%]">
+                                   Бот, какой сейчас шанс дропа ДК робы в ТОИ? И ТПшни меня туда.
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-3 flex-row-reverse">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-blue-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
+                                    <i data-lucide="bot" class="text-white w-4 h-4"></i>
+                                </div>
+                                <div class="bg-purple-900/20 p-4 rounded-2xl rounded-tr-none border border-purple-500/20 text-purple-100 text-sm max-w-[85%] relative overflow-hidden">
+                                   <div class="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent animate-pulse"></div>
+                                   <p class="relative z-10 mb-2">Шанс дропа <span class="text-purple-300 font-semibold">Robe of Seal</span> с моба Platinum Guardian Chief (TOI 10) составляет <span class="text-purple-300 font-bold">5.2%</span>.</p>
+                                   <div class="relative z-10 flex gap-2 mt-2">
+                                        <button class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-xs rounded text-white transition-colors">Teleport (100k Adena)</button>
+                                   </div>
+                                </div>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Genesis Module -->
+            <div class="group relative rounded-3xl overflow-hidden bg-[#0F172A] border border-white/5 hover:border-emerald-500/50 transition-all duration-500">
+                <div class="absolute inset-0 bg-gradient-to-b from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div class="grid lg:grid-cols-2 gap-12 p-8 lg:p-12 items-center relative z-10">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-6 border border-emerald-500/20">
+                            Moonshot Module
+                        </div>
+                        <h3 class="text-4xl font-bold mb-4 flex items-center gap-4 text-white">
+                            <i data-lucide="globe" class="w-10 h-10 text-emerald-500"></i> Genesis <span class="text-2xl text-slate-500 font-normal">World Creator</span>
+                        </h3>
+                        <p class="text-slate-300 mb-8 text-lg leading-relaxed">
+                            Революция в создании серверов. Забудьте про XML и базы данных. Стройте мир Lineage 2 визуально, перетаскивая объекты мышкой.
+                        </p>
+                        <ul class="space-y-4 mb-8">
+                             <li class="flex items-start gap-4">
+                                <div class="mt-1 w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+                                    <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
+                                </div>
+                                <div>
+                                    <strong class="text-white block">The Launcher</strong>
+                                    <span class="text-slate-400 text-sm">Запуск L2 сервера в Docker в 1 клик.</span>
+                                </div>
+                            </li>
+                             <li class="flex items-start gap-4">
+                                <div class="mt-1 w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+                                    <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
+                                </div>
+                                <div>
+                                    <strong class="text-white block">Visual Drop Editor</strong>
+                                    <span class="text-slate-400 text-sm">Drag & Drop матрица дропа.</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="relative h-[400px] bg-slate-900 rounded-2xl border border-white/10 flex items-center justify-center overflow-hidden shadow-2xl">
+                         <div class="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(16,185,129,0.05)_50%,transparent_75%,transparent_100%)] bg-[length:40px_40px]"></div>
+                         
+                         <div class="relative w-full max-w-sm bg-[#1E293B] rounded-lg border border-white/10 shadow-2xl p-4 transform transition-transform group-hover:scale-105 duration-500">
+                            <div class="flex justify-between items-center mb-4 border-b border-white/5 pb-2">
+                                <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Logic Builder</span>
+                                <div class="flex gap-1">
+                                    <div class="w-2 h-2 rounded-full bg-slate-600"></div>
+                                    <div class="w-2 h-2 rounded-full bg-slate-600"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-2 bg-[#0F172A] p-2 rounded border border-emerald-500/50 text-xs text-white">
+                                    <span class="text-yellow-500 font-bold">Event:</span> Mob_Kill (Valakas)
+                                </div>
+                                <div class="h-4 w-0.5 bg-slate-600 mx-4"></div>
+                                <div class="flex items-center gap-2 bg-[#0F172A] p-2 rounded border border-blue-500/50 text-xs text-white">
+                                     <span class="text-blue-400 font-bold">Action:</span> Spawn_NPC (Teleporter)
+                                </div>
+                            </div>
+
+                            <div class="absolute -right-4 -bottom-4 bg-emerald-600 text-white text-xs px-3 py-1.5 rounded-full shadow-lg flex items-center gap-2 animate-bounce">
+                                <i data-lucide="mouse-pointer" class="w-3 h-3"></i> Drag & Drop
+                            </div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section id="roadmap" class="py-24 bg-[#0B1120] border-t border-white/5">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 text-white">Roadmap 2025</h2>
+                <p class="text-slate-400">Путь от фундамента к технологической революции</p>
+            </div>
+
+            <div class="relative max-w-4xl mx-auto">
+                <div class="absolute left-[19px] md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-emerald-500 opacity-30"></div>
+
+                <div class="space-y-12">
+                    <!-- Phase 1 -->
+                    <div class="relative flex flex-col md:flex-row gap-8 items-start group">
+                        <div class="hidden md:flex flex-1 justify-end pt-2 pr-8 text-right">
+                           <div>
+                            <h3 class="text-xl font-bold text-blue-400 group-hover:text-blue-300 transition-colors">Phase 1: Foundation</h3>
+                            <p class="text-sm text-slate-500">Месяц 1-2</p>
+                           </div>
+                        </div>
+                        <div class="absolute left-[11px] md:left-1/2 -translate-x-1/2 w-4 h-4 bg-[#0B1120] rounded-full border-4 border-blue-500 z-10 shadow-[0_0_15px_rgba(59,130,246,0.5)] group-hover:scale-125 transition-transform"></div>
+                        <div class="pl-12 md:pl-8 flex-1 pt-1">
+                            <div class="md:hidden mb-2">
+                                <h3 class="text-xl font-bold text-blue-400">Phase 1: Foundation</h3>
+                                <p class="text-sm text-slate-500">Месяц 1-2</p>
+                            </div>
+                            <div class="bg-[#151e32] p-6 rounded-xl border border-white/5 hover:border-blue-500/30 transition-all">
+                                <ul class="space-y-3 text-slate-300 text-sm">
+                                    <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-blue-500"></div> Aegis MVP: RMT Tracker</li>
+                                    <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-blue-500"></div> Genesis Alpha: Docker</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 2 -->
+                    <div class="relative flex flex-col md:flex-row gap-8 items-start group">
+                        <div class="hidden md:flex flex-1 justify-end pt-2 pr-8 text-right md:order-1">
+                            <div class="bg-[#151e32] p-6 rounded-xl border border-white/5 hover:border-purple-500/30 transition-all text-left">
+                                <ul class="space-y-3 text-slate-300 text-sm">
+                                    <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-purple-500"></div> Oracle MVP: Support Bot</li>
+                                    <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-purple-500"></div> Integration: Aegis + Oracle</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="absolute left-[11px] md:left-1/2 -translate-x-1/2 w-4 h-4 bg-[#0B1120] rounded-full border-4 border-purple-500 z-10 shadow-[0_0_15px_rgba(168,85,247,0.5)] group-hover:scale-125 transition-transform"></div>
+                        <div class="pl-12 md:pl-8 flex-1 pt-1 md:order-1 md:text-left text-right">
+                           <div class="hidden md:block">
+                            <h3 class="text-xl font-bold text-purple-400 group-hover:text-purple-300 transition-colors">Phase 2: Intelligence</h3>
+                            <p class="text-sm text-slate-500">Месяц 3-4</p>
+                           </div>
+                           <div class="md:hidden mb-2 text-left">
+                                <h3 class="text-xl font-bold text-purple-400">Phase 2: Intelligence</h3>
+                                <p class="text-sm text-slate-500">Месяц 3-4</p>
+                           </div>
+                           <div class="md:hidden bg-[#151e32] p-6 rounded-xl border border-white/5 hover:border-purple-500/30 transition-all text-left">
+                                <ul class="space-y-3 text-slate-300 text-sm">
+                                    <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-purple-500"></div> Oracle MVP</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                     <!-- Phase 3 -->
+                     <div class="relative flex flex-col md:flex-row gap-8 items-start group">
+                        <div class="hidden md:flex flex-1 justify-end pt-2 pr-8 text-right">
+                           <div>
+                            <h3 class="text-xl font-bold text-emerald-400 group-hover:text-emerald-300 transition-colors">Phase 3: The Revolution</h3>
+                            <p class="text-sm text-slate-500">Месяц 6+</p>
+                           </div>
+                        </div>
+                        <div class="absolute left-[11px] md:left-1/2 -translate-x-1/2 w-4 h-4 bg-[#0B1120] rounded-full border-4 border-emerald-500 z-10 shadow-[0_0_15px_rgba(16,185,129,0.5)] group-hover:scale-125 transition-transform"></div>
+                        <div class="pl-12 md:pl-8 flex-1 pt-1">
+                            <div class="md:hidden mb-2">
+                                <h3 class="text-xl font-bold text-emerald-400">Phase 3: The Revolution</h3>
+                                <p class="text-sm text-slate-500">Месяц 6+</p>
+                            </div>
+                            <div class="bg-[#151e32] p-6 rounded-xl border border-white/5 hover:border-emerald-500/30 transition-all">
+                                <ul class="space-y-3 text-slate-300 text-sm">
+                                    <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> Genesis Beta: Drop Editor</li>
+                                    <li class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> World Builder Release</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#020617] py-12 border-t border-white/5 text-slate-500 text-sm">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded bg-gradient-to-tr from-purple-600 to-blue-600 flex items-center justify-center text-white">
+                        <i data-lucide="cpu" class="w-4 h-4"></i>
+                    </div>
+                    <span class="font-bold text-slate-300 text-lg">L2 Mastermind</span>
+                </div>
+                <div class="flex gap-8 font-medium">
+                    <a href="#" class="hover:text-white transition-colors">Документация</a>
+                    <a href="#" class="hover:text-white transition-colors">О нас</a>
+                    <a href="#" class="hover:text-white transition-colors">Контакты</a>
+                </div>
+                <div class="text-xs">
+                    © 2025 L2 Mastermind Ecosystem. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('glass-nav');
+                navbar.classList.remove('py-6');
+                navbar.classList.add('py-4');
+            } else {
+                navbar.classList.remove('glass-nav');
+                navbar.classList.remove('py-4');
+                navbar.classList.add('py-6');
+            }
+        });
+
+        // Mobile Menu Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMenu() {
+            const isClosed = mobileMenu.classList.contains('opacity-0');
+            if (isClosed) {
+                mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleMenu);
+        closeMenuBtn.addEventListener('click', toggleMenu);
+        
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', toggleMenu);
+        });
+    </script>
+</body>
+</html>

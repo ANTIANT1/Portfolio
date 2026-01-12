@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSC Digital Infrastructure | Compliance & Automation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .active-tab {
+            border-bottom: 2px solid #059669; /* emerald-600 */
+            color: #059669;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+    <!-- Chosen Palette: "Medical Compliance" (Emerald-600, Slate-800, White). Serious, clean, trustworthy. -->
+    <!-- Application Structure Plan:
+         1. Hero: "Rechtssicherheit" (Legal Certainty) as the main value proposition.
+         2. Problem Grid (Herausforderungen): Addressing Werbeverbot, Bürokratie, DSGVO in German.
+         3. Interactive Solution (Lösungskonzept): Demonstrating the logic of the system (Limit tracking, SEO, AI).
+         4. Impact Analysis (Mehrwert): Radar chart comparing "Risiko" (Risk) and Bar chart for "Zeit" (Time).
+         5. System Modules (Systemaufbau): Replacing "Pricing" with "Technical Modules" to avoid commercial offer status.
+         6. Footer: Simple contact form request without business entity claims.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All text in German. -->
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">🌿</span>
+                    <span class="text-xl font-bold text-slate-900 tracking-tight">CSC<span class="text-emerald-600">Digital</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#herausforderungen" class="text-slate-500 hover:text-emerald-600 transition font-medium">Herausforderungen</a>
+                    <a href="#loesung" class="text-slate-500 hover:text-emerald-600 transition font-medium">Lösung</a>
+                    <a href="#vorteile" class="text-slate-500 hover:text-emerald-600 transition font-medium">Vorteile</a>
+                    <a href="#module" class="text-slate-500 hover:text-emerald-600 transition font-medium">Module</a>
+                    <button onclick="scrollToContact()" class="bg-emerald-600 text-white px-5 py-2 rounded-full hover:bg-emerald-700 transition shadow-md font-medium">
+                        Gespräch anfragen
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-white pb-16 pt-20 lg:pt-32 overflow-hidden border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="text-center max-w-4xl mx-auto">
+                <div class="inline-flex items-center px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-semibold uppercase tracking-wide mb-6">
+                    KCanG & DSGVO Konform
+                </div>
+                <h1 class="text-4xl tracking-tight font-extrabold text-slate-900 sm:text-5xl md:text-6xl mb-6">
+                    Digitale Infrastruktur für <br>
+                    <span class="text-emerald-600">Anbauvereinigungen</span>
+                </h1>
+                <p class="mt-4 max-w-2xl mx-auto text-lg text-slate-500 md:mt-6 md:text-xl">
+                    Wir entwickeln maßgeschneiderte Softwarelösungen, die den bürokratischen Aufwand minimieren und rechtliche Risiken ausschließen. 
+                    <span class="block mt-2 font-medium text-slate-700">Keine Werbung. Keine Excel-Listen. Nur Compliance.</span>
+                </p>
+                <div class="mt-10 flex justify-center gap-4">
+                    <a href="#loesung" class="px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 md:py-4 md:text-lg md:px-10 shadow-lg transition transform hover:-translate-y-1">
+                        Konzept ansehen
+                    </a>
+                    <a href="#herausforderungen" class="px-8 py-3 border border-slate-200 text-base font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50 md:py-4 md:text-lg md:px-10 transition">
+                        Warum digitalisieren?
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section 1: Herausforderungen (Challenges) -->
+    <section id="herausforderungen" class="py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-extrabold text-slate-900">Die Realität nach dem 1. April</h2>
+                <p class="mt-4 text-lg text-slate-500 max-w-2xl mx-auto">Der Betrieb eines Anbauvereins ist kein Hobby, sondern eine administrative Herausforderung. Klicken Sie auf die Karten für Details.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1: Werbeverbot -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm cursor-pointer card-hover transition duration-300 border-t-4 border-red-500 group" onclick="highlightProblem(this, 'werbeverbot')">
+                    <div class="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">📢 🚫</div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Werbeverbot</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">§ 6 KCanG verbietet Werbung. Wie gewinnen Sie Mitglieder ohne Gesetzesverstoß?</p>
+                </div>
+                <!-- Card 2: Bürokratie -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm cursor-pointer card-hover transition duration-300 border-t-4 border-orange-500 group" onclick="highlightProblem(this, 'buerokratie')">
+                    <div class="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">⚖️ 📝</div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Strenge Limits</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">25g/Tag, 50g/Monat. Ein Gramm zu viel ausgegeben bedeutet strafrechtliche Konsequenzen.</p>
+                </div>
+                <!-- Card 3: Datenschutz -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm cursor-pointer card-hover transition duration-300 border-t-4 border-blue-500 group" onclick="highlightProblem(this, 'datenschutz')">
+                    <div class="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">🔒 💾</div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">DSGVO (Art. 9)</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">Mitgliederdaten gelten als Gesundheitsdaten. Excel und Google Drive sind hier tabu.</p>
+                </div>
+                <!-- Card 4: Kommunikation -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm cursor-pointer card-hover transition duration-300 border-t-4 border-purple-500 group" onclick="highlightProblem(this, 'kommunikation')">
+                    <div class="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">💬 🤯</div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Kommunikation</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed">Hunderte E-Mails mit denselben Fragen: "Wie trete ich bei?", "Was kostet es?".</p>
+                </div>
+            </div>
+            
+            <div id="problem-detail" class="mt-8 bg-white p-8 rounded-xl border border-slate-200 shadow-sm hidden fade-in">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <span class="text-emerald-600 text-xl">💡</span>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-slate-700 text-lg" id="problem-text">Wählen Sie eine Karte oben aus.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Lösung (Solution) -->
+    <section id="loesung" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 md:flex md:justify-between md:items-end">
+                <div class="max-w-2xl">
+                    <h2 class="text-3xl font-extrabold text-slate-900">Das digitale Ökosystem</h2>
+                    <p class="mt-4 text-lg text-slate-500">Unsere Architektur basiert auf "Privacy by Design" und Automatisierung. Wählen Sie ein Modul.</p>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="flex flex-wrap border-b border-slate-200 mb-10">
+                <button class="tab-btn px-6 py-4 text-sm font-semibold text-slate-500 hover:text-emerald-600 focus:outline-none transition active-tab" onclick="openTab('web')">1. Web-Compliance</button>
+                <button class="tab-btn px-6 py-4 text-sm font-semibold text-slate-500 hover:text-emerald-600 focus:outline-none transition" onclick="openTab('crm')">2. Mitglieder-Verwaltung</button>
+                <button class="tab-btn px-6 py-4 text-sm font-semibold text-slate-500 hover:text-emerald-600 focus:outline-none transition" onclick="openTab('ai')">3. KI-Automatisierung</button>
+                <button class="tab-btn px-6 py-4 text-sm font-semibold text-slate-500 hover:text-emerald-600 focus:outline-none transition" onclick="openTab('content')">4. Content & Transparenz</button>
+            </div>
+
+            <!-- Content Area -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                
+                <!-- Text Content -->
+                <div id="tab-content-text" class="fade-in">
+                    <!-- Injected via JS -->
+                </div>
+
+                <!-- Interactive Viz -->
+                <div class="bg-slate-50 p-8 rounded-3xl border border-slate-100 shadow-inner flex flex-col justify-center items-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 to-teal-500"></div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 w-full text-center" id="chart-title">System-Simulation</h4>
+                    <div class="chart-container">
+                        <canvas id="solutionChart"></canvas>
+                    </div>
+                    <div class="mt-8 text-center z-10">
+                        <button id="demo-action-btn" class="text-sm bg-white border border-slate-300 px-5 py-2 rounded-lg hover:bg-slate-50 transition shadow-sm font-medium text-slate-700">
+                            Simulation starten
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Vorteile (Impact) -->
+    <section id="vorteile" class="py-20 bg-slate-900 text-white relative overflow-hidden">
+        <!-- Decoration -->
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-emerald-900 opacity-20 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 rounded-full bg-blue-900 opacity-20 blur-3xl"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-extrabold">Warum eine eigene Plattform?</h2>
+                <p class="mt-4 text-slate-300 max-w-2xl mx-auto">Vergleich: Manuelle Verwaltung vs. Digitale Infrastruktur.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Compliance Radar -->
+                <div class="bg-slate-800 p-8 rounded-2xl shadow-xl border border-slate-700">
+                    <h3 class="text-xl font-bold mb-2 text-center text-emerald-400">Risiko-Analyse</h3>
+                    <p class="text-sm text-slate-400 text-center mb-6">Reduzierung rechtlicher Risiken durch Automatisierung.</p>
+                    <div class="chart-container">
+                        <canvas id="riskChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Time Savings Bar -->
+                <div class="bg-slate-800 p-8 rounded-2xl shadow-xl border border-slate-700">
+                    <h3 class="text-xl font-bold mb-2 text-center text-blue-400">Effizienz-Gewinn</h3>
+                    <p class="text-sm text-slate-400 text-center mb-6">Stunden pro Woche für administrative Aufgaben.</p>
+                    <div class="chart-container">
+                        <canvas id="timeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Module (Replacing Pricing) -->
+    <section id="module" class="py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-extrabold text-slate-900">Systemarchitektur</h2>
+                <p class="mt-4 text-lg text-slate-500">Wir bieten keine starren Pakete, sondern entwickeln die Infrastruktur basierend auf Ihrer Wachstumsphase.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Phase 1 -->
+                <div class="bg-white rounded-2xl shadow-sm p-8 border border-slate-200 hover:border-emerald-500 transition duration-300 flex flex-col">
+                    <div class="flex-grow">
+                        <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600 text-2xl mb-6">🚀</div>
+                        <h3 class="text-xl font-bold text-slate-900">Phase 1: Compliance Basics</h3>
+                        <p class="mt-2 text-sm text-slate-500">Für Clubs in der Gründungsphase (i.G.).</p>
+                        <div class="mt-6 border-t border-slate-100 pt-6">
+                            <ul class="space-y-3">
+                                <li class="flex items-start text-sm text-slate-600">
+                                    <span class="text-emerald-500 mr-2 mt-0.5">✓</span> Info-Portal (Landing Page)
+                                </li>
+                                <li class="flex items-start text-sm text-slate-600">
+                                    <span class="text-emerald-500 mr-2 mt-0.5">✓</span> Rechtssichere Texte (Keine Werbung)
+                                </li>
+                                <li class="flex items-start text-sm text-slate-600">
+                                    <span class="text-emerald-500 mr-2 mt-0.5">✓</span> Sichere Warteliste (DSGVO)
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase 2 -->
+                <div class="bg-white rounded-2xl shadow-lg p-8 border-2 border-emerald-500 relative transform md:-translate-y-4 flex flex-col">
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-emerald-500 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide">Empfohlen</div>
+                    <div class="flex-grow">
+                        <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600 text-2xl mb-6">⚙️</div>
+                        <h3 class="text-xl font-bold text-slate-900">Phase 2: Prozess-Automatisierung</h3>
+                        <p class="mt-2 text-sm text-slate-500">Für operative Clubs mit Zuteilung.</p>
+                        <div class="mt-6 border-t border-slate-100 pt-6">
+                            <ul class="space-y-3">
+                                <li class="flex items-start text-sm text-slate-600">
+                                    <span class="text-emerald-500 mr-2 mt-0.5">✓</span> Mitglieder-Bereich (Login)
+                                </li>
+                                <li class="flex items-start text-sm text-slate-600">
+                                    <span class="text-emerald-500 mr-2 mt-0.5">✓</span> Limit-Tracker (50g Logik)
+                                </li>
+                                <li class="flex items-start text-sm text-slate-600">
+                                    <span class="text-emerald-500 mr-2 mt-0.5">✓</span> Beitragsverwaltung
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase 3 -->
+                <div class="bg-white rounded-2xl shadow-sm p-8 border border-slate-200 hover:border-emerald-500 transition duration-300 flex flex-col">
+                    <div class="flex-grow">
+                        <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600 text-2xl mb-6">🤖</div>
+                        <h3 class="text-xl font-bold text-slate-900">Phase 3: AI & Scale</h3>
+                        <p class="mt-2 text-sm text-slate-500">Für etablierte Clubs (200+ Mitglieder).</p>
+                        <div class="mt-6 border-t border-slate-100 pt-6">
+                            <ul class="space-y-3">
+                                <li class="flex items-start text-sm text-slate-600">
+                                    <span class="text-emerald-500 mr-2 mt-0.5">✓</span> KI-Support Bot (Satzung-basiert)
+                                </li>
+                                <li class="flex items-start text-sm text-slate-600">
+                                    <span class="text-emerald-500 mr-2 mt-0.5">✓</span> Track & Trace Integration
+                                </li>
+                                <li class="flex items-start text-sm text-slate-600">
+                                    <span class="text-emerald-500 mr-2 mt-0.5">✓</span> Daten-Analytik
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-12 text-center">
+                 <p class="text-slate-500 text-sm mb-4">Dies ist eine Übersicht der technischen Möglichkeiten. Kein verbindliches kommerzielles Angebot.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                <span class="block">Interesse an einer Zusammenarbeit?</span>
+                <span class="block text-emerald-600 mt-2">Lassen Sie uns Ihr Projekt besprechen.</span>
+            </h2>
+            <div class="mt-8 flex justify-center gap-4">
+                <a href="mailto:contact@example.com" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 transition shadow-md">
+                    E-Mail senden
+                </a>
+            </div>
+            <div class="mt-12 border-t border-slate-100 pt-8">
+                <p class="text-xs text-slate-400">
+                    Digital Project Concept Showcase. <br>
+                    Entwicklung & Beratung für digitale Prozesse.<br>
+                    Standort: Essen, NRW.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA & CONTENT (German) ---
+        const solutionContent = {
+            web: {
+                title: "1. Web-Compliance (Info-Portal)",
+                description: `
+                    <ul class="space-y-4 text-slate-600 text-lg leading-relaxed">
+                        <li><strong>Keine Werbung:</strong> Die Seite fungiert als neutrale Dokumentation der Vereinsaktivitäten.</li>
+                        <li><strong>Geschlossener Bereich:</strong> Details zu Sorten (Strains) und Ernteergebnissen sind nur für verifizierte Mitglieder sichtbar.</li>
+                        <li><strong>SEO-Strategie:</strong> Optimierung auf "informative Suchbegriffe" (z.B. "CSC Satzung Essen"), um organisch gefunden zu werden, ohne gegen das Werbeverbot zu verstoßen.</li>
+                    </ul>
+                `,
+                chartType: 'bar',
+                chartLabel: 'Sichtbarkeit (Index)',
+                chartData: [20, 95], 
+                chartLabels: ['Ohne SEO', 'Mit Compliance SEO'],
+                btnText: "SEO-Effekt simulieren",
+                chartColor: 'rgba(5, 150, 105, 0.7)' // Emerald 600
+            },
+            crm: {
+                title: "2. Mitglieder & Limit-Management",
+                description: `
+                    <ul class="space-y-4 text-slate-600 text-lg leading-relaxed">
+                        <li><strong>Limit-Wächter:</strong> Das System berechnet in Echtzeit das verbleibende Kontingent (max. 50g/Monat).</li>
+                        <li><strong>Hard Block:</strong> Eine Abgabe über das Limit hinaus ist technisch unmöglich – Schutz vor menschlichem Versagen.</li>
+                        <li><strong>Pseudonymisierung:</strong> Trennung von Klardaten (Name) und Verbrauchsdaten (Menge) in der Datenbank.</li>
+                    </ul>
+                `,
+                chartType: 'doughnut',
+                chartLabel: 'Monatslimit (Gramm)',
+                chartData: [42, 8], 
+                chartLabels: ['Ausgegeben (42g)', 'Verfügbar (8g)'],
+                btnText: "Abgabe simulieren (+5g)",
+                chartColor: ['rgba(59, 130, 246, 0.8)', 'rgba(203, 213, 225, 0.6)']
+            },
+            ai: {
+                title: "3. KI-Automatisierung",
+                description: `
+                    <ul class="space-y-4 text-slate-600 text-lg leading-relaxed">
+                        <li><strong>Satzungs-Bot:</strong> Ein Chatbot, der spezifisch auf Ihre Vereinssatzung trainiert ist. Er beantwortet Fragen zu Beiträgen und Pflichten automatisch.</li>
+                        <li><strong>Dokumente:</strong> Automatische Erstellung von Mitgliedsanträgen und Rechnungen als PDF.</li>
+                        <li><strong>24/7 Erreichbarkeit:</strong> Entlastung des Vorstands von Routine-Anfragen.</li>
+                    </ul>
+                `,
+                chartType: 'line',
+                chartLabel: 'Automatisierte Antworten',
+                chartData: [10, 45, 130, 250, 410, 580], 
+                chartLabels: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun'],
+                btnText: "Wachstum simulieren",
+                chartColor: 'rgba(139, 92, 246, 0.7)'
+            },
+            content: {
+                title: "4. Content & Transparenz",
+                description: `
+                    <ul class="space-y-4 text-slate-600 text-lg leading-relaxed">
+                        <li><strong>Media Production:</strong> Hochwertige Fotos/Videos der Anlage für Behördennachweise oder interne Reports.</li>
+                        <li><strong>Education:</strong> Aufbereitung von Bildungsmaterialien zur Suchtprävention (gesetzlich gefordert).</li>
+                        <li><strong>Transparenz:</strong> Digitale Einsicht in Laboranalysen für Mitglieder.</li>
+                    </ul>
+                `,
+                chartType: 'pie',
+                chartLabel: 'Content-Mix',
+                chartData: [50, 30, 20], 
+                chartLabels: ['Education', 'Reports', 'News'],
+                btnText: "Mix anzeigen",
+                chartColor: ['rgba(245, 158, 11, 0.7)', 'rgba(16, 185, 129, 0.7)', 'rgba(59, 130, 246, 0.7)']
+            }
+        };
+
+        // --- GLOBAL VARIABLES ---
+        let currentChartInstance = null;
+        let crmDataValue = 42;
+
+        // --- FUNCTIONS ---
+
+        // 1. Problem Highlight Logic
+        function highlightProblem(element, type) {
+            const detailBox = document.getElementById('problem-detail');
+            const detailText = document.getElementById('problem-text');
+            
+            const texts = {
+                'werbeverbot': '<strong>Lösung:</strong> Wir erstellen "Informationsportale". Keine reißerischen Slogans, sondern faktische, SEO-optimierte Informationen, die rechtlich als "sachliche Unterrichtung" gelten.',
+                'buerokratie': '<strong>Lösung:</strong> Unsere Software protokolliert jedes Gramm. Bei Erreichen von 50g/Monat (oder 30g für unter 21-Jährige) sperrt das System automatisch weitere Transaktionen.',
+                'datenschutz': '<strong>Lösung:</strong> Hosting ausschließlich auf ISO-zertifizierten Servern in Deutschland. Ende-zu-Ende-Verschlüsselung sensibler Mitgliederdaten.',
+                'kommunikation': '<strong>Lösung:</strong> Ein KI-Assistent übernimmt die Erstkommunikation. Er filtert ernsthafte Interessenten und beantwortet Standardfragen basierend auf Ihrer Satzung.'
+            };
+
+            detailText.innerHTML = texts[type];
+            detailBox.classList.remove('hidden');
+            
+            // Visual feedback
+            document.querySelectorAll('#herausforderungen .bg-white').forEach(card => {
+                card.classList.remove('ring-2', 'ring-emerald-500', 'bg-emerald-50');
+            });
+            element.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-50');
+        }
+
+        // 2. Tab Logic
+        function openTab(tabId) {
+            // Update UI
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'text-emerald-600');
+                btn.classList.add('text-slate-500');
+            });
+            event.currentTarget.classList.add('active-tab', 'text-emerald-600');
+            event.currentTarget.classList.remove('text-slate-500');
+
+            // Update Content
+            const data = solutionContent[tabId];
+            const contentDiv = document.getElementById('tab-content-text');
+            
+            contentDiv.innerHTML = `
+                <h3 class="text-2xl font-bold text-slate-900 mb-6">${data.title}</h3>
+                <div class="prose prose-emerald">${data.description}</div>
+            `;
+            
+            document.getElementById('demo-action-btn').innerText = data.btnText;
+            document.getElementById('demo-action-btn').onclick = () => simulateAction(tabId);
+
+            // Render Chart
+            renderSolutionChart(tabId);
+        }
+
+        function renderSolutionChart(tabId) {
+            const ctx = document.getElementById('solutionChart').getContext('2d');
+            const data = solutionContent[tabId];
+
+            if (currentChartInstance) {
+                currentChartInstance.destroy();
+            }
+
+            const config = {
+                type: data.chartType,
+                data: {
+                    labels: data.chartLabels,
+                    datasets: [{
+                        label: data.chartLabel,
+                        data: data.chartData,
+                        backgroundColor: data.chartColor,
+                        borderColor: Array.isArray(data.chartColor) ? '#fff' : data.chartColor.replace('0.7', '1'),
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { usePointStyle: true } }
+                    }
+                }
+            };
+            
+            if(tabId === 'crm') crmDataValue = 42;
+            currentChartInstance = new Chart(ctx, config);
+        }
+
+        function simulateAction(tabId) {
+            if (!currentChartInstance) return;
+
+            if (tabId === 'crm') {
+                if (crmDataValue < 50) {
+                    crmDataValue += 5;
+                    if (crmDataValue > 50) crmDataValue = 50; 
+                    currentChartInstance.data.datasets[0].data = [crmDataValue, 50 - crmDataValue];
+                    if (crmDataValue === 50) {
+                        currentChartInstance.data.datasets[0].backgroundColor = ['#EF4444', '#E2E8F0'];
+                        alert("⚠️ Limit erreicht! Abgabe systemseitig gesperrt.");
+                    }
+                    currentChartInstance.update();
+                } else {
+                    alert("Monatslimit ausgeschöpft.");
+                }
+            } else if (tabId === 'ai') {
+                const newData = currentChartInstance.data.datasets[0].data.map(val => val + Math.floor(Math.random() * 50));
+                currentChartInstance.data.datasets[0].data = newData;
+                currentChartInstance.update();
+            } else if (tabId === 'web') {
+                 currentChartInstance.data.datasets[0].data[1] = Math.min(100, currentChartInstance.data.datasets[0].data[1] + 2);
+                 currentChartInstance.update();
+            }
+        }
+
+        // 3. Impact Charts
+        function initImpactCharts() {
+            // Risk Radar
+            const ctxRisk = document.getElementById('riskChart').getContext('2d');
+            new Chart(ctxRisk, {
+                type: 'radar',
+                data: {
+                    labels: ['Werbung (§6)', 'Datenleck', 'Jugendschutz', 'Schwarzmarkt'],
+                    datasets: [{
+                        label: 'Manuell / Excel',
+                        data: [90, 85, 70, 60],
+                        fill: true,
+                        backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                        borderColor: 'rgb(239, 68, 68)',
+                        pointBackgroundColor: 'rgb(239, 68, 68)',
+                    }, {
+                        label: 'Mit CSC Digital',
+                        data: [10, 5, 5, 5],
+                        fill: true,
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                        borderColor: 'rgb(16, 185, 129)',
+                        pointBackgroundColor: 'rgb(16, 185, 129)',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255,255,255,0.1)' },
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            pointLabels: { color: '#94a3b8', font: {size: 11} },
+                            ticks: { display: false }
+                        }
+                    },
+                    plugins: { legend: { labels: { color: '#cbd5e1' } } }
+                }
+            });
+
+            // Time Bar
+            const ctxTime = document.getElementById('timeChart').getContext('2d');
+            new Chart(ctxTime, {
+                type: 'bar',
+                data: {
+                    labels: ['E-Mail Support', 'Dokumentation', 'Rechnungsstellung'],
+                    datasets: [{
+                        label: 'Manuell (Std/Woche)',
+                        data: [15, 10, 8],
+                        backgroundColor: 'rgba(148, 163, 184, 0.5)'
+                    },
+                    {
+                        label: 'Digital (Std/Woche)',
+                        data: [2, 1, 0.5],
+                        backgroundColor: '#3b82f6'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                    },
+                    plugins: { legend: { labels: { color: '#cbd5e1' } } }
+                }
+            });
+        }
+
+        function scrollToContact() {
+            document.querySelector('footer').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            openTab('web');
+            initImpactCharts();
+            // Force active state style for first tab
+            document.querySelector('.tab-btn').classList.add('active-tab', 'text-emerald-600');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JETZWORK | Arbeit zu Deinen Bedingungen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: "Modern Tech" -->
+    <!-- Application Structure Plan: Создан одностраничный лендинг с четким разделением на смысловые блоки и переключателем языков (DE/RU). Структура: Hero-секция -> Проблема -> Решение -> Блок ценности (для Исполнителей/Бизнеса) -> Сравнение -> CTA. Архитектура адаптирована для немецкого рынка (DE-first), но сохраняет доступность для русскоязычной аудитории через JS-переключатель, что является ключевым для стратегии go-to-market. -->
+    <!-- Visualization & Content Choices: 
+        - Проблема/Решение: Визуализация - иконки (Unicode) и карточки (HTML/CSS).
+        - Ценность для аудиторий: Визуализация - интерактивный переключатель (JS Toggle).
+        - Сравнение: Визуализация - таблица (HTML/CSS).
+        - Анимации: Плавные появления элементов при скролле (JS Intersection Observer).
+        - Локализация: Все текстовые строки вынесены в JS-объект `translations` и динамически меняются при смене языка. Это позволяет поддерживать многоязычность в одном файле.
+     -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f0f2f5; color: #1a202c; }
+        .hero-bg { background: linear-gradient(135deg, #ffffff 0%, #eef2f7 100%); }
+        .cta-btn-primary { background-color: #2563eb; color: white; transition: all 0.3s ease; }
+        .cta-btn-primary:hover { background-color: #1d4ed8; transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .cta-btn-secondary { background-color: #e2e8f0; color: #1e293b; transition: all 0.3s ease; }
+        .cta-btn-secondary:hover { background-color: #cbd5e1; transform: translateY(-2px); }
+        .glass-card { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .fade-in-section { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-section.is-visible { opacity: 1; transform: translateY(0); }
+        .toggle-btn { transition: all 0.3s ease; }
+        .toggle-btn.active { background-color: #2563eb; color: white; }
+        .toggle-btn:not(.active) { background-color: #e2e8f0; color: #475569; }
+        .benefit-content { transition: opacity 0.4s ease-in-out; }
+        .lang-switcher {
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .lang-switcher.active {
+            background-color: #2563eb;
+            color: white;
+        }
+        .lang-switcher:not(.active) {
+            color: #475569;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-gray-800">JETZWORK</h1>
+            <div class="flex items-center space-x-8">
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#solution" class="text-gray-600 hover:text-blue-600 font-medium" data-lang-key="navHowItWorks">Wie es funktioniert</a>
+                    <a href="#benefits" class="text-gray-600 hover:text-blue-600 font-medium" data-lang-key="navBenefits">Vorteile</a>
+                    <a href="#compare" class="text-gray-600 hover:text-blue-600 font-medium" data-lang-key="navWhyUs">Warum wir?</a>
+                </nav>
+                <div class="flex items-center space-x-2 border-l border-gray-300 pl-6">
+                    <button id="lang-de" class="lang-switcher active">DE</button>
+                    <button id="lang-ru" class="lang-switcher">RU</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main>
+        <section class="hero-bg py-20 md:py-32">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-5xl md:text-7xl font-extrabold text-gray-800 mb-6 leading-tight" data-lang-key="heroTitle">
+                    Arbeit, die sich<br>nach <span class="text-blue-600">Ihnen</span> richtet.
+                </h2>
+                <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-10" data-lang-key="heroSubtitle">
+                    JETZWORK ist die Plattform, die verifizierte Experten direkt mit Unternehmen verbindet. Vergessen Sie die Vermittler. Bestimmen Sie Ihre eigenen Regeln.
+                </p>
+                <div class="flex justify-center space-x-4">
+                    <a href="#join" class="cta-btn-primary text-lg font-semibold px-8 py-4 rounded-full" data-lang-key="ctaPilot">Pilot werden</a>
+                    <a href="#join" class="cta-btn-secondary text-lg font-semibold px-8 py-4 rounded-full" data-lang-key="ctaBusiness">Experten finden</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Problem -->
+        <section class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16 fade-in-section">
+                    <h3 class="text-4xl font-bold text-gray-800" data-lang-key="problemTitle">Der Arbeitsmarkt ist kaputt. Wir reparieren ihn.</h3>
+                    <p class="text-lg text-gray-600 mt-4 max-w-2xl mx-auto" data-lang-key="problemSubtitle">Das alte System der Zeitarbeit ist für alle unrentabel und demütigend.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div class="fade-in-section">
+                        <div class="p-8 rounded-2xl bg-red-50 border border-red-200">
+                            <h4 class="text-2xl font-bold text-red-800 mb-4" data-lang-key="problemForSpecialist">Für Spezialisten:</h4>
+                            <ul class="space-y-3 text-red-700">
+                                <li class="flex items-start"><span class="mr-3 text-xl">⛓️</span> <span data-lang-key="problemForSpecialist1">"Sklaverei des 21. Jahrhunderts": niedrige Löhne, keine Wahl.</span></li>
+                                <li class="flex items-start"><span class="mr-3 text-xl">⏳</span> <span data-lang-key="problemForSpecialist2">Zeit- und Geldverlust durch Vermittler.</span></li>
+                                <li class="flex items-start"><span class="mr-3 text-xl">🚫</span> <span data-lang-key="problemForSpecialist3">Keine Kontrolle über Karriere und Einkommen.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="fade-in-section">
+                        <div class="p-8 rounded-2xl bg-yellow-50 border border-yellow-200">
+                             <h4 class="text-2xl font-bold text-yellow-800 mb-4" data-lang-key="problemForBusiness">Für Unternehmen:</h4>
+                            <ul class="space-y-3 text-yellow-700">
+                                <li class="flex items-start"><span class="mr-3 text-xl">🔥</span> <span data-lang-key="problemForBusiness1">Personalmangel im unpassendsten Moment.</span></li>
+                                <li class="flex items-start"><span class="mr-3 text-xl">💸</span> <span data-lang-key="problemForBusiness2">Enorme Überzahlungen an Agenturen für unmotiviertes Personal.</span></li>
+                                <li class="flex items-start"><span class="mr-3 text-xl">🐌</span> <span data-lang-key="problemForBusiness3">Langsamer und bürokratischer Einstellungsprozess.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Solution -->
+        <section id="solution" class="py-20">
+            <div class="container mx-auto px-6 text-center">
+                 <div class="text-center mb-16 fade-in-section">
+                    <h3 class="text-4xl font-bold text-gray-800" data-lang-key="solutionTitle">Einfach. Schnell. Direkt.</h3>
+                    <p class="text-lg text-gray-600 mt-4 max-w-2xl mx-auto" data-lang-key="solutionSubtitle">Nur drei Schritte zu effizienter Arbeit.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-10">
+                    <div class="text-center fade-in-section">
+                        <div class="text-5xl font-bold text-blue-600/30 mb-4">1</div>
+                        <h4 class="text-2xl font-bold mb-2" data-lang-key="solutionStep1Title">Anfrage erstellen</h4>
+                        <p class="text-gray-600" data-lang-key="solutionStep1Desc">Ein Unternehmen veröffentlicht eine Aufgabe in 60 Sekunden. Ein Spezialist sieht sie sofort.</p>
+                    </div>
+                     <div class="text-center fade-in-section" style="transition-delay: 200ms;">
+                        <div class="text-5xl font-bold text-blue-600/30 mb-4">2</div>
+                        <h4 class="text-2xl font-bold mb-2" data-lang-key="solutionStep2Title">Den Besten auswählen</h4>
+                        <p class="text-gray-600" data-lang-key="solutionStep2Desc">Erhalten Sie Angebote von geprüften Fachleuten mit Bewertungen und wählen Sie den passenden aus.</p>
+                    </div>
+                     <div class="text-center fade-in-section" style="transition-delay: 400ms;">
+                        <div class="text-5xl font-bold text-blue-600/30 mb-4">3</div>
+                        <h4 class="text-2xl font-bold mb-2" data-lang-key="solutionStep3Title">Arbeit erledigen</h4>
+                        <p class="text-gray-600" data-lang-key="solutionStep3Desc">Der Spezialist erledigt die Aufgabe zu seinen Bedingungen. Das Unternehmen erhält das Ergebnis. Alle gewinnen.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section id="benefits" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12 fade-in-section">
+                    <h3 class="text-4xl font-bold text-gray-800" data-lang-key="benefitsTitle">Eine Plattform, gebaut für <span id="audience-name" class="text-blue-600">Spezialisten</span></h3>
+                    <div class="mt-8 flex justify-center">
+                        <div class="flex rounded-full p-1 bg-gray-200">
+                             <button id="pilot-toggle" class="toggle-btn active text-sm md:text-base font-semibold py-2 px-6 rounded-full" data-lang-key="togglePilot">Ich bin Spezialist ("Pilot")</button>
+                             <button id="business-toggle" class="toggle-btn text-sm md:text-base font-semibold py-2 px-6 rounded-full" data-lang-key="toggleBusiness">Ich bin ein Unternehmen</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="fade-in-section">
+                    <div id="pilot-benefits" class="benefit-content grid md:grid-cols-3 gap-8">
+                        <div class="glass-card p-6 rounded-xl text-center">
+                            <div class="text-4xl mb-4">💰</div>
+                            <h4 class="text-xl font-bold mb-2" data-lang-key="pilotBenefit1Title">Bestimmen Sie Ihren Preis</h4>
+                            <p class="text-gray-600" data-lang-key="pilotBenefit1Desc">Sie entscheiden, was Ihre Stunde wert ist. Keine von einer Agentur aufgezwungenen Tarife.</p>
+                        </div>
+                         <div class="glass-card p-6 rounded-xl text-center">
+                            <div class="text-4xl mb-4">🕊️</div>
+                            <h4 class="text-xl font-bold mb-2" data-lang-key="pilotBenefit2Title">Arbeiten, wann Sie wollen</h4>
+                            <p class="text-gray-600" data-lang-key="pilotBenefit2Desc">Wählen Sie nur die Aufträge, die für Sie interessant und bequem sind. Völlige Freiheit.</p>
+                        </div>
+                         <div class="glass-card p-6 rounded-xl text-center">
+                            <div class="text-4xl mb-4">🚀</div>
+                            <h4 class="text-xl font-bold mb-2" data-lang-key="pilotBenefit3Title">Bauen Sie Ihren Ruf auf</h4>
+                            <p class="text-gray-600" data-lang-key="pilotBenefit3Desc">Erhalten Sie Bewertungen, steigern Sie Ihr Rating und erhalten Sie Zugang zu den besten Aufträgen.</p>
+                        </div>
+                    </div>
+                     <div id="business-benefits" class="benefit-content hidden grid md:grid-cols-3 gap-8">
+                        <div class="glass-card p-6 rounded-xl text-center">
+                            <div class="text-4xl mb-4">✅</div>
+                            <h4 class="text-xl font-bold mb-2" data-lang-key="businessBenefit1Title">Geprüfte Fachleute</h4>
+                            <p class="text-gray-600" data-lang-key="businessBenefit1Desc">Jeder Spezialist wird überprüft. Sie stellen die Besten ein.</p>
+                        </div>
+                         <div class="glass-card p-6 rounded-xl text-center">
+                            <div class="text-4xl mb-4">⚡</div>
+                            <h4 class="text-xl font-bold mb-2" data-lang-key="businessBenefit2Title">Einstellung in Minuten, nicht Tagen</h4>
+                            <p class="text-gray-600" data-lang-key="businessBenefit2Desc">Besetzen Sie dringende Stellen und schließen Sie Lücken bei Arbeitsspitzen sofort.</p>
+                        </div>
+                         <div class="glass-card p-6 rounded-xl text-center">
+                            <div class="text-4xl mb-4">💡</div>
+                            <h4 class="text-xl font-bold mb-2" data-lang-key="businessBenefit3Title">Keine Bürokratie</h4>
+                            <p class="text-gray-600" data-lang-key="businessBenefit3Desc">Sie arbeiten mit unabhängigen Auftragnehmern. Keine Arbeitsverträge und Kopfschmerzen.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+         <!-- Comparison Section -->
+        <section id="compare" class="py-20">
+            <div class="container mx-auto px-6 fade-in-section">
+                <div class="text-center mb-12">
+                    <h3 class="text-4xl font-bold text-gray-800" data-lang-key="compareTitle">JETZWORK vs. Das alte System</h3>
+                </div>
+                <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="p-4 md:p-6 font-bold text-lg" data-lang-key="compareCriterion">Kriterium</th>
+                                <th class="p-4 md:p-6 font-bold text-lg text-red-600">Zeitarbeit</th>
+                                <th class="p-4 md:p-6 font-bold text-lg text-blue-600">JETZWORK</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr>
+                                <td class="p-4 md:p-6 font-semibold" data-lang-key="compareControl">Kontrolle</td>
+                                <td class="p-4 md:p-6 text-gray-700" data-lang-key="compareControlZeitarbeit">Die Agentur entscheidet für Sie</td>
+                                <td class="p-4 md:p-6 font-bold text-gray-800" data-lang-key="compareControlJetzwork">Sie entscheiden selbst</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 md:p-6 font-semibold" data-lang-key="comparePayment">Bezahlung</td>
+                                <td class="p-4 md:p-6 text-gray-700" data-lang-key="comparePaymentZeitarbeit">Niedriger, fester Satz</td>
+                                <td class="p-4 md:p-6 font-bold text-gray-800" data-lang-key="comparePaymentJetzwork">Hoch, von Ihnen festgelegt</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 md:p-6 font-semibold" data-lang-key="compareCommission">Provision</td>
+                                <td class="p-4 md:p-6 text-gray-700" data-lang-key="compareCommissionZeitarbeit">Versteckt, bis zu 100%+</td>
+                                <td class="p-4 md:p-6 font-bold text-gray-800" data-lang-key="compareCommissionJetzwork">Transparent, 15%</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 md:p-6 font-semibold" data-lang-key="compareSpeed">Geschwindigkeit</td>
+                                <td class="p-4 md:p-6 text-gray-700" data-lang-key="compareSpeedZeitarbeit">Tage, Bürokratie</td>
+                                <td class="p-4 md:p-6 font-bold text-gray-800" data-lang-key="compareSpeedJetzwork">Minuten, ein Klick</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section id="join" class="py-20 bg-blue-600 text-white">
+            <div class="container mx-auto px-6 text-center fade-in-section">
+                <h3 class="text-4xl font-bold mb-4" data-lang-key="finalCtaTitle">Es ist Zeit, neu zu arbeiten.</h3>
+                <p class="text-lg text-blue-200 mb-8 max-w-2xl mx-auto" data-lang-key="finalCtaSubtitle">Treten Sie der JETZWORK-Warteliste bei. Erhalten Sie frühzeitigen Zugang und exklusive Boni als Mitglied im "Gründer-Club".</p>
+                <div class="max-w-lg mx-auto bg-white/20 p-2 rounded-full flex">
+                    <input id="email-input" type="email" placeholder="Ihre E-Mail" class="w-full bg-transparent px-6 py-3 text-white placeholder-blue-200 focus:outline-none">
+                    <button id="join-btn" class="bg-white text-blue-600 font-bold px-8 py-3 rounded-full flex-shrink-0 hover:bg-blue-100 transition-colors" data-lang-key="joinBtn">Anmelden</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-6 text-center">
+            <p data-lang-key="footer">&copy; 2025 JETZWORK. Alle Rechte vorbehalten.</p>
+        </div>
+    </footer>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const translations = {
+                de: {
+                    navHowItWorks: "Wie es funktioniert",
+                    navBenefits: "Vorteile",
+                    navWhyUs: "Warum wir?",
+                    heroTitle: "Arbeit, die sich<br>nach <span class='text-blue-600'>Ihnen</span> richtet.",
+                    heroSubtitle: "JETZWORK ist die Plattform, die verifizierte Experten direkt mit Unternehmen verbindet. Vergessen Sie die Vermittler. Bestimmen Sie Ihre eigenen Regeln.",
+                    ctaPilot: "Pilot werden",
+                    ctaBusiness: "Experten finden",
+                    problemTitle: "Der Arbeitsmarkt ist kaputt. Wir reparieren ihn.",
+                    problemSubtitle: "Das alte System der Zeitarbeit ist für alle unrentabel und demütigend.",
+                    problemForSpecialist: "Für Spezialisten:",
+                    problemForSpecialist1: "\"Sklaverei des 21. Jahrhunderts\": niedrige Löhne, keine Wahl.",
+                    problemForSpecialist2: "Zeit- und Geldverlust durch Vermittler.",
+                    problemForSpecialist3: "Keine Kontrolle über Karriere und Einkommen.",
+                    problemForBusiness: "Für Unternehmen:",
+                    problemForBusiness1: "Personalmangel im unpassendsten Moment.",
+                    problemForBusiness2: "Enorme Überzahlungen an Agenturen für unmotiviertes Personal.",
+                    problemForBusiness3: "Langsamer und bürokratischer Einstellungsprozess.",
+                    solutionTitle: "Einfach. Schnell. Direkt.",
+                    solutionSubtitle: "Nur drei Schritte zu effizienter Arbeit.",
+                    solutionStep1Title: "Anfrage erstellen",
+                    solutionStep1Desc: "Ein Unternehmen veröffentlicht eine Aufgabe in 60 Sekunden. Ein Spezialist sieht sie sofort.",
+                    solutionStep2Title: "Den Besten auswählen",
+                    solutionStep2Desc: "Erhalten Sie Angebote von geprüften Fachleuten mit Bewertungen und wählen Sie den passenden aus.",
+                    solutionStep3Title: "Arbeit erledigen",
+                    solutionStep3Desc: "Der Spezialist erledigt die Aufgabe zu seinen Bedingungen. Das Unternehmen erhält das Ergebnis. Alle gewinnen.",
+                    benefitsTitle: "Eine Plattform, gebaut für <span id='audience-name' class='text-blue-600'>Spezialisten</span>",
+                    togglePilot: "Ich bin Spezialist (\"Pilot\")",
+                    toggleBusiness: "Ich bin ein Unternehmen",
+                    pilotBenefit1Title: "Bestimmen Sie Ihren Preis",
+                    pilotBenefit1Desc: "Sie entscheiden, was Ihre Stunde wert ist. Keine von einer Agentur aufgezwungenen Tarife.",
+                    pilotBenefit2Title: "Arbeiten, wann Sie wollen",
+                    pilotBenefit2Desc: "Wählen Sie nur die Aufträge, die für Sie interessant und bequem sind. Völlige Freiheit.",
+                    pilotBenefit3Title: "Bauen Sie Ihren Ruf auf",
+                    pilotBenefit3Desc: "Erhalten Sie Bewertungen, steigern Sie Ihr Rating und erhalten Sie Zugang zu den besten Aufträgen.",
+                    businessBenefit1Title: "Geprüfte Fachleute",
+                    businessBenefit1Desc: "Jeder Spezialist wird überprüft. Sie stellen die Besten ein.",
+                    businessBenefit2Title: "Einstellung in Minuten, nicht Tagen",
+                    businessBenefit2Desc: "Besetzen Sie dringende Stellen und schließen Sie Lücken bei Arbeitsspitzen sofort.",
+                    businessBenefit3Title: "Keine Bürokratie",
+                    businessBenefit3Desc: "Sie arbeiten mit unabhängigen Auftragnehmern. Keine Arbeitsverträge und Kopfschmerzen.",
+                    compareTitle: "JETZWORK vs. Das alte System",
+                    compareCriterion: "Kriterium",
+                    compareControl: "Kontrolle",
+                    compareControlZeitarbeit: "Die Agentur entscheidet für Sie",
+                    compareControlJetzwork: "Sie entscheiden selbst",
+                    comparePayment: "Bezahlung",
+                    comparePaymentZeitarbeit: "Niedriger, fester Satz",
+                    comparePaymentJetzwork: "Hoch, von Ihnen festgelegt",
+                    compareCommission: "Provision",
+                    compareCommissionZeitarbeit: "Versteckt, bis zu 100%+",
+                    compareCommissionJetzwork: "Transparent, 15%",
+                    compareSpeed: "Geschwindigkeit",
+                    compareSpeedZeitarbeit: "Tage, Bürokratie",
+                    compareSpeedJetzwork: "Minuten, ein Klick",
+                    finalCtaTitle: "Es ist Zeit, neu zu arbeiten.",
+                    finalCtaSubtitle: "Treten Sie der JETZWORK-Warteliste bei. Erhalten Sie frühzeitigen Zugang und exklusive Boni als Mitglied im \"Gründer-Club\".",
+                    emailPlaceholder: "Ihre E-Mail",
+                    joinBtn: "Anmelden",
+                    footer: "&copy; 2025 JETZWORK. Alle Rechte vorbehalten."
+                },
+                ru: {
+                    navHowItWorks: "Как это работает",
+                    navBenefits: "Преимущества",
+                    navWhyUs: "Почему мы?",
+                    heroTitle: "Работа, которая<br>подчиняется <span class='text-blue-600'>Вам</span>.",
+                    heroSubtitle: "JETZWORK — это платформа, которая напрямую соединяет проверенных специалистов с бизнесом. Забудьте о посредниках. Устанавливайте свои правила.",
+                    ctaPilot: "Стать Пилотом",
+                    ctaBusiness: "Найти Специалиста",
+                    problemTitle: "Рынок труда сломан. Мы его чиним.",
+                    problemSubtitle: "Старая система `Zeitarbeit` невыгодна и унизительна для всех.",
+                    problemForSpecialist: "Для Специалиста:",
+                    problemForSpecialist1: "\"Рабство 21 века\": низкие ставки, нет выбора.",
+                    problemForSpecialist2: "Потеря времени и денег на посредников.",
+                    problemForSpecialist3: "Никакого контроля над своей карьерой и доходом.",
+                    problemForBusiness: "Для Бизнеса:",
+                    problemForBusiness1: "\"Кадровый голод\" в самый неподходящий момент.",
+                    problemForBusiness2: "Огромные переплаты агентствам за немотивированный персонал.",
+                    problemForBusiness3: "Медленный и бюрократичный процесс найма.",
+                    solutionTitle: "Просто. Быстро. Напрямую.",
+                    solutionSubtitle: "Всего три шага к эффективной работе.",
+                    solutionStep1Title: "Создайте Запрос",
+                    solutionStep1Desc: "Бизнес публикует задачу за 60 секунд. Специалист видит ее мгновенно.",
+                    solutionStep2Title: "Выберите Лучшего",
+                    solutionStep2Desc: "Получите отклики от проверенных профессионалов с рейтингом и выберите подходящего.",
+                    solutionStep3Title: "Выполните Работу",
+                    solutionStep3Desc: "Специалист выполняет задачу на своих условиях. Бизнес получает результат. Все в выигрыше.",
+                    benefitsTitle: "Платформа, созданная для <span id='audience-name' class='text-blue-600'>Специалистов</span>",
+                    togglePilot: "Я Специалист (\"Пилот\")",
+                    toggleBusiness: "Я Бизнес",
+                    pilotBenefit1Title: "Устанавливайте свою цену",
+                    pilotBenefit1Desc: "Вы сами решаете, сколько стоит ваш час. Никаких ставок, навязанных агентством.",
+                    pilotBenefit2Title: "Работайте, когда хотите",
+                    pilotBenefit2Desc: "Выбирайте только те заказы, которые вам интересны и удобны. Полная свобода.",
+                    pilotBenefit3Title: "Стройте свою репутацию",
+                    pilotBenefit3Desc: "Получайте отзывы, повышайте рейтинг и получайте доступ к лучшим заказам.",
+                    businessBenefit1Title: "Проверенные профессионалы",
+                    businessBenefit1Desc: "Каждый специалист проходит верификацию. Вы нанимаете лучших.",
+                    businessBenefit2Title: "Найм за минуты, не дни",
+                    businessBenefit2Desc: "Закрывайте срочные вакансии и пиковые нагрузки мгновенно.",
+                    businessBenefit3Title: "Никакой бюрократии",
+                    businessBenefit3Desc: "Вы работаете с независимыми подрядчиками. Никаких трудовых договоров и головной боли.",
+                    compareTitle: "JETZWORK vs. Старая Система",
+                    compareCriterion: "Критерий",
+                    compareControl: "Контроль",
+                    compareControlZeitarbeit: "Агентство решает за вас",
+                    compareControlJetzwork: "Вы решаете сами",
+                    comparePayment: "Оплата",
+                    comparePaymentZeitarbeit: "Низкая, фиксированная ставка",
+                    comparePaymentJetzwork: "Высокая, устанавливается вами",
+                    compareCommission: "Комиссия",
+                    compareCommissionZeitarbeit: "Скрытая, до 100%+",
+                    compareCommissionJetzwork: "Прозрачная, 15%",
+                    compareSpeed: "Скорость",
+                    compareSpeedZeitarbeit: "Дни, бюрократия",
+                    compareSpeedJetzwork: "Минуты, в один клик",
+                    finalCtaTitle: "Пришло время работать по-новому.",
+                    finalCtaSubtitle: "Присоединяйтесь к списку ожидания JETZWORK. Получите ранний доступ и эксклюзивные бонусы как участник \"Клуба Основателей\".",
+                    emailPlaceholder: "Ваш email",
+                    joinBtn: "Записаться",
+                    footer: "&copy; 2025 JETZWORK. Все права защищены."
+                }
+            };
+
+            const langDeBtn = document.getElementById('lang-de');
+            const langRuBtn = document.getElementById('lang-ru');
+            const emailInput = document.getElementById('email-input');
+
+            const setLanguage = (lang) => {
+                document.documentElement.lang = lang;
+                document.querySelectorAll('[data-lang-key]').forEach(element => {
+                    const key = element.getAttribute('data-lang-key');
+                    if (translations[lang][key]) {
+                        element.innerHTML = translations[lang][key];
+                    }
+                });
+                emailInput.placeholder = translations[lang].emailPlaceholder;
+                // Re-assign audience name after translation
+                const audienceNameSpan = document.getElementById('audience-name');
+                if(document.getElementById('pilot-toggle').classList.contains('active')){
+                    audienceNameSpan.textContent = lang === 'de' ? 'Spezialisten' : 'Специалистов';
+                } else {
+                    audienceNameSpan.textContent = lang === 'de' ? 'Unternehmen' : 'Бизнеса';
+                }
+            };
+
+            langDeBtn.addEventListener('click', () => {
+                setLanguage('de');
+                langDeBtn.classList.add('active');
+                langRuBtn.classList.remove('active');
+            });
+
+            langRuBtn.addEventListener('click', () => {
+                setLanguage('ru');
+                langRuBtn.classList.add('active');
+                langDeBtn.classList.remove('active');
+            });
+            
+            // --- Intersection Observer for fade-in animations ---
+            const sections = document.querySelectorAll('.fade-in-section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // --- Benefits Toggle Logic ---
+            const pilotToggle = document.getElementById('pilot-toggle');
+            const businessToggle = document.getElementById('business-toggle');
+            const pilotBenefits = document.getElementById('pilot-benefits');
+            const businessBenefits = document.getElementById('business-benefits');
+            const audienceName = document.getElementById('audience-name');
+            
+            const getCurrentLang = () => document.documentElement.lang;
+
+            const showPilotBenefits = () => {
+                pilotToggle.classList.add('active');
+                businessToggle.classList.remove('active');
+                businessBenefits.classList.add('hidden');
+                 pilotBenefits.style.opacity = 0;
+                setTimeout(() => {
+                    pilotBenefits.classList.remove('hidden');
+                    audienceName.textContent = getCurrentLang() === 'de' ? 'Spezialisten' : 'Специалистов';
+                    setTimeout(() => pilotBenefits.style.opacity = 1, 50);
+                }, 100);
+            };
+
+            const showBusinessBenefits = () => {
+                businessToggle.classList.add('active');
+                pilotToggle.classList.remove('active');
+                pilotBenefits.classList.add('hidden');
+                businessBenefits.style.opacity = 0;
+                 setTimeout(() => {
+                    businessBenefits.classList.remove('hidden');
+                    audienceName.textContent = getCurrentLang() === 'de' ? 'Unternehmen' : 'Бизнеса';
+                    setTimeout(() => businessBenefits.style.opacity = 1, 50);
+                }, 100);
+            };
+
+            pilotToggle.addEventListener('click', showPilotBenefits);
+            businessToggle.addEventListener('click', showBusinessBenefits);
+
+            // Set initial language based on browser preference if available
+            const userLang = navigator.language || navigator.userLanguage; 
+            if (userLang.startsWith('ru')) {
+                setLanguage('ru');
+                langRuBtn.classList.add('active');
+                langDeBtn.classList.remove('active');
+            } else {
+                 setLanguage('de');
+            }
+
+        });
+    </script>
+</body>
+</html>
+
