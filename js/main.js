@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
             'skill-content-5': 'Real Estate Photography',
 
             'skill-eng-title': 'Engineering',
-            'skill-eng-1': 'M.Sc. Civil Engineering (Odessa)',
+            'skill-eng-1': 'M.Sc. Civil Engineering (Odesa)',
             'skill-eng-2': 'AutoCAD, Revit (BIM)',
             'skill-eng-3': 'Blender (Basic 3D Modeling)',
             'skill-eng-4': 'Technical Documentation',
@@ -320,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
             'skill-content-5': 'Immobilienfotografie',
 
             'skill-eng-title': 'Ingenieurwesen',
-            'skill-eng-1': 'M.Sc. Bauingenieurwesen (Odessa)',
+            'skill-eng-1': 'M.Sc. Bauingenieurwesen (Odesa)',
             'skill-eng-2': 'AutoCAD, Revit (BIM)',
             'skill-eng-3': 'Blender (Grundlegende 3D-Modellierung)',
             'skill-eng-4': 'Technische Dokumentation',
@@ -454,7 +454,7 @@ document.addEventListener('DOMContentLoaded', function() {
             'skill-content-5': 'Фотография недвижимости',
 
             'skill-eng-title': 'Инженерное дело',
-            'skill-eng-1': 'М.Sc. Гражданское строительство (Одесса)',
+            'skill-eng-1': 'М.Sc. Гражданское строительство (Одеса)',
             'skill-eng-2': 'AutoCAD, Revit (BIM)',
             'skill-eng-3': 'Blender (базовое 3D моделирование)',
             'skill-eng-4': 'Техническая документация',
