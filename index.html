@@ -322,9 +322,26 @@
         .hero h1 {
             font-size: 4rem;
             font-weight: 700;
-            color: var(--text-primary);
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 1rem;
             animation: fadeInUp 0.8s ease 0.2s backwards;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .hero h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #2563eb, #3b82f6);
+            border-radius: 2px;
+            animation: fadeInUp 0.8s ease 0.4s backwards;
         }
 
         .hero .tagline {
