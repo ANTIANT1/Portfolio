@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
             'contact-location-val': 'Essen, NRW<br>Germany',
             'contact-languages': 'Languages',
             'contact-languages-val': 'German B1→B2<br>English C1<br>Russian Native<br>Ukrainian Native',
-            'footer-rights': '© 2026 Yevhenii Korchevskyi. All rights reserved.',
+            'footer-rights': '© 2026 ANTIANTI. All rights reserved.',
             'footer-role': 'System Architect & DevOps Engineer | Essen, Germany',
 
             // Services
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
             'contact-location-val': 'Essen, NRW<br>Deutschland',
             'contact-languages': 'Sprachen',
             'contact-languages-val': 'Deutsch B1→B2<br>Englisch C1<br>Russisch Muttersprache<br>Ukrainisch Muttersprache',
-            'footer-rights': '© 2026 Yevhenii Korchevskyi. Alle Rechte vorbehalten.',
+            'footer-rights': '© 2026 ANTIANTI. Alle Rechte vorbehalten.',
             'footer-role': 'Systemarchitekt & DevOps-Ingenieur | Essen, Deutschland',
 
             // Services
@@ -353,7 +353,7 @@ document.addEventListener('DOMContentLoaded', function() {
             'contact-location-val': 'Эссен, NRW<br>Германия',
             'contact-languages': 'Языки',
             'contact-languages-val': 'Немецкий B1→B2<br>Английский C1<br>Русский Родной<br>Украинский Родной',
-            'footer-rights': '© 2026 Евгений Корчевский. Все права защищены.',
+            'footer-rights': '© 2026 ANTIANTI. Все права защищены.',
             'footer-role': 'Системный Архитектор и DevOps Инженер | Эссен, Германия',
 
             // Services
@@ -487,7 +487,7 @@ document.addEventListener('DOMContentLoaded', function() {
             'contact-location-val': 'Ессен, NRW<br>Німеччина',
             'contact-languages': 'Мови',
             'contact-languages-val': 'Німецька B1→B2<br>Англійська C1<br>Російська Рідна<br>Українська Рідна',
-            'footer-rights': '© 2026 Євгеній Корчевський. Усі права захищені.',
+            'footer-rights': '© 2026 ANTIANTI. Усі права захищені.',
             'footer-role': 'Системний Архітектор та DevOps Інженер | Ессен, Німеччина',
 
             // Services
