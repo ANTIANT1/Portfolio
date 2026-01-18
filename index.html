@@ -326,17 +326,17 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
             animation: fadeInUp 0.8s ease 0.2s backwards;
             position: relative;
-            display: inline-block;
         }
         
         .hero h1::after {
             content: '';
             position: absolute;
             bottom: -10px;
-            left: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 60px;
             height: 4px;
             background: linear-gradient(90deg, #2563eb, #3b82f6);
