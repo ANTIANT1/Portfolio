@@ -63,14 +63,15 @@ PERSONAL/
 - [x] Настроить современные стили (градиенты, анимации)
 - [x] Добавить JavaScript интерактивность
 - [x] Добавить LiD Trainer (экзамен на гражданство)
+- [x] Добавить AI Game Studio (генерация настольных игр)
 - [ ] Интегрировать систему фильтрации проектов
 - [ ] Добавить темную тему
 - [ ] Разместить на хостинге (GitHub Pages / Vercel)
 
 ## 📊 Статистика портфолио
 
-- **Проектов:** 8+ (DreamVerse, StartKlar, JETZWORK, NeuroDrive, ContentFlow, DTZ Trainer, Cannabis Clubs, LiD Trainer)
-- **Строк кода:** 46K+
+- **Проектов:** 10+ (DreamVerse, StartKlar, JETZWORK, NeuroDrive, ContentFlow, DTZ Trainer, Cannabis Clubs, LiD Trainer, AI Game Studio, NRW ART)
+- **Строк кода:** 61K+
 - **Технологий:** 15+
 - **Статус:** Production Ready
 
@@ -84,13 +85,15 @@ PERSONAL/
 
 ## 🔄 Обновления
 
-**Последнее обновление:** 13 января 2026
+**Последнее обновление:** 17 февраля 2026
 
 ### Последние изменения:
 - ✅ Добавлен **LiD Trainer** (Leben in Deutschland) - проект #8
-- ✅ Обновлена статистика: 8 проектов, 46K+ строк кода
+- ✅ Добавлен **AI Game Studio** (TTS Game Generator) - проект #9
+- ✅ Добавлен **NRW ART** (Online Gallery, Learning Project) - проект #10
+- ✅ Обновлена статистика: 10 проектов, 61K+ строк кода
 - ✅ Обновлены index.html, resume.md, WORK_SUMMARY.md
-- ✅ Создана полная документация для LiD Trainer
+- ✅ Создана полная документация для LiD Trainer и AI Game Studio
 
 ---
 
