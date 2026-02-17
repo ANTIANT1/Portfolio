@@ -149,6 +149,20 @@ document.addEventListener('DOMContentLoaded', function() {
             'contentflow-p2': '<strong>AI & Features:</strong> Gemini AI engine for instant content generation (scripts, posts) via Python Flask. Includes real-time Analytics Dashboard, Kanban task management, and rich media handling.',
             'btn-details': 'Details',
 
+            // Projects - StartKlar
+            'startklar-desc': 'AI-powered requirements gathering through natural dialogue',
+            'startklar-text': '<strong>Automated tech specs collection via AI conversation.</strong> Multi-language dialogue system (DE/RU/EN) with real-time data extraction, live document preview, and REST API. Reduces client onboarding time by 70%. Full monorepo architecture with Docker Compose.',
+            'startklar-stats': 'MVP Ready &nbsp;&bull;&nbsp; 8K+ LOC &nbsp;&bull;&nbsp; 3 Languages',
+
+            // Projects - AI Game Studio
+            'aigamestudio-desc': 'Automated tabletop game generator for Tabletop Simulator',
+            'aigamestudio-text': '<strong>From idea to playable prototype in 5 minutes.</strong> Multi-agent pipeline (Concept &rarr; Designer &rarr; Writer) generates GDD, 20 cards with mana curve, AI art via Flux Schnell, and exports a ready-to-play TTS .json mod. Hybrid Search META-RAG uses BGG Top-100 + Steam Workshop as knowledge base.',
+            'aigamestudio-stats': '~$0.46 per game &nbsp;&bull;&nbsp; 3-5 min pipeline &nbsp;&bull;&nbsp; MIT License',
+
+            // Projects - NRW ART
+            'nrwart-desc': 'Online gallery for NRW artists',
+            'nrwart-text': 'Full-stack e-commerce platform for emerging NRW artists. Monorepo (npm workspaces). Gallery with search/filters, shopping cart, checkout with 15% commission, Cloudinary image storage. Built to explore Next.js App Router + Express + MongoDB stack.',
+
             // Skills
             'skill-backend-title': 'Backend & DevOps',
             'skill-backend-1': 'Python FastAPI (DreamVerse, NeuroDrive)',
@@ -282,6 +296,20 @@ document.addEventListener('DOMContentLoaded', function() {
             'contentflow-p1': '<strong>Enterprise Core:</strong> Plattformübergreifende Clean Architecture (BLoC) App für Windows/macOS/Linux/Web. Bietet robuste CI/CD-Pipelines, 85% Testabdeckung und optimierten Hive-Speicher.',
             'contentflow-p2': '<strong>KI & Features:</strong> Gemini KI-Engine für sofortige Content-Generierung (Skripte, Posts) via Python Flask. Inklusive Echtzeit-Analyse-Dashboard, Kanban-Board und Medienverwaltung.',
             'btn-details': 'Details',
+
+            // Projects - StartKlar
+            'startklar-desc': 'KI-gestützte Anforderungserfassung durch natürlichen Dialog',
+            'startklar-text': '<strong>Automatisierte Lastenheft-Erfassung via KI-Gespräch.</strong> Mehrsprachiges Dialogsystem (DE/RU/EN) mit Echtzeit-Datenextraktion, Live-Dokumentenvorschau und REST API. Reduziert Kunden-Onboarding-Zeit um 70%. Vollständige Monorepo-Architektur mit Docker Compose.',
+            'startklar-stats': 'MVP Bereit &nbsp;&bull;&nbsp; 8K+ LOC &nbsp;&bull;&nbsp; 3 Sprachen',
+
+            // Projects - AI Game Studio
+            'aigamestudio-desc': 'Automatisierter Tabletop-Spielgenerator für Tabletop Simulator',
+            'aigamestudio-text': '<strong>Von der Idee zum spielbaren Prototyp in 5 Minuten.</strong> Multi-Agent-Pipeline (Konzept &rarr; Designer &rarr; Writer) generiert GDD, 20 Karten mit Mana-Kurve, KI-Kunst via Flux Schnell und exportiert ein spielfertiges TTS .json Mod. Hybrid Search META-RAG nutzt BGG Top-100 + Steam Workshop als Wissensbasis.',
+            'aigamestudio-stats': '~0,46 $ pro Spiel &nbsp;&bull;&nbsp; 3-5 Min Pipeline &nbsp;&bull;&nbsp; MIT Lizenz',
+
+            // Projects - NRW ART
+            'nrwart-desc': 'Online-Galerie für NRW-Künstler',
+            'nrwart-text': 'Full-Stack E-Commerce-Plattform für aufstrebende NRW-Künstler. Monorepo (npm workspaces). Galerie mit Suche/Filtern, Warenkorb, Checkout mit 15% Provision, Cloudinary Bildspeicherung. Entwickelt zur Erkundung von Next.js App Router + Express + MongoDB Stack.',
 
             // Skills
             'skill-backend-title': 'Backend & DevOps',
@@ -417,6 +445,20 @@ document.addEventListener('DOMContentLoaded', function() {
             'contentflow-p2': '<strong>AI и функции:</strong> Gemini AI движок для мгновенной генерации контента (скрипты, посты) через Python Flask. Включает реал-тайм аналитическую панель, Kanban управление задачами и обработку медиа.',
             'btn-details': 'Подробнее',
 
+            // Projects - StartKlar
+            'startklar-desc': 'AI-сбор требований через естественный диалог',
+            'startklar-text': '<strong>Автоматизированный сбор ТЗ через AI-беседу.</strong> Многоязычная диалоговая система (DE/RU/EN) с извлечением данных в реальном времени, живой предпросмотр документа и REST API. Сокращает время онбординга клиентов на 70%. Полная монорепо архитектура с Docker Compose.',
+            'startklar-stats': 'MVP готов &nbsp;&bull;&nbsp; 8K+ LOC &nbsp;&bull;&nbsp; 3 языка',
+
+            // Projects - AI Game Studio
+            'aigamestudio-desc': 'Автоматизированный генератор настольных игр для Tabletop Simulator',
+            'aigamestudio-text': '<strong>От идеи до играбельного прототипа за 5 минут.</strong> Мульти-агентный пайплайн (Концепция &rarr; Дизайнер &rarr; Райтер) генерирует GDD, 20 карт с мана-кривой, AI-арт через Flux Schnell и экспортирует готовый к игре TTS .json мод. Hybrid Search META-RAG использует BGG Top-100 + Steam Workshop как базу знаний.',
+            'aigamestudio-stats': '~$0.46 за игру &nbsp;&bull;&nbsp; 3-5 мин пайплайн &nbsp;&bull;&nbsp; MIT License',
+
+            // Projects - NRW ART
+            'nrwart-desc': 'Онлайн-галерея для художников NRW',
+            'nrwart-text': 'Full-stack e-commerce платформа для начинающих художников NRW. Монорепо (npm workspaces). Галерея с поиском/фильтрами, корзина, чекаут с 15% комиссией, хранение изображений Cloudinary. Создана для изучения Next.js App Router + Express + MongoDB стека.',
+
             // Skills
             'skill-backend-title': 'Backend и DevOps',
             'skill-backend-1': 'Python FastAPI (DreamVerse, NeuroDrive)',
@@ -550,6 +592,20 @@ document.addEventListener('DOMContentLoaded', function() {
             'contentflow-p1': '<strong>Корпоративне ядро:</strong> Кросплатформний додаток з Clean Architecture (BLoC) для Windows/macOS/Linux/Web. Функції включають надійні CI/CD пайплайни (GitHub Actions), 85% покриття тестами та оптимізоване Hive локальне сховище.',
             'contentflow-p2': '<strong>AI та функції:</strong> Gemini AI рушій для миттєвої генерації контенту (скрипти, пости) через Python Flask. Включає реал-тайм аналітичну панель, Kanban управління завданнями та обробку медіа.',
             'btn-details': 'Детальніше',
+
+            // Projects - StartKlar
+            'startklar-desc': 'AI-збір вимог через природний діалог',
+            'startklar-text': '<strong>Автоматизований збір ТЗ через AI-бесіду.</strong> Багатомовна діалогова система (DE/RU/EN) з витягненням даних в реальному часі, живий попередній перегляд документа та REST API. Скорочує час онбордингу клієнтів на 70%. Повна монорепо архітектура з Docker Compose.',
+            'startklar-stats': 'MVP готовий &nbsp;&bull;&nbsp; 8K+ LOC &nbsp;&bull;&nbsp; 3 мови',
+
+            // Projects - AI Game Studio
+            'aigamestudio-desc': 'Автоматизований генератор настільних ігор для Tabletop Simulator',
+            'aigamestudio-text': '<strong>Від ідеї до грабельного прототипу за 5 хвилин.</strong> Мульти-агентний пайплайн (Концепція &rarr; Дизайнер &rarr; Райтер) генерує GDD, 20 карт з мана-кривою, AI-арт через Flux Schnell та експортує готовий до гри TTS .json мод. Hybrid Search META-RAG використовує BGG Top-100 + Steam Workshop як базу знань.',
+            'aigamestudio-stats': '~$0.46 за гру &nbsp;&bull;&nbsp; 3-5 хв пайплайн &nbsp;&bull;&nbsp; MIT License',
+
+            // Projects - NRW ART
+            'nrwart-desc': 'Онлайн-галерея для художників NRW',
+            'nrwart-text': 'Full-stack e-commerce платформа для починаючих художників NRW. Монорепо (npm workspaces). Галерея з пошуком/фільтрами, кошик, чекаут з 15% комісією, зберігання зображень Cloudinary. Створена для вивчення Next.js App Router + Express + MongoDB стеку.',
 
             // Skills
             'skill-backend-title': 'Backend та DevOps',

@@ -792,15 +792,16 @@
 
         .tech-tag {
             display: inline-block;
-            padding: 0.35rem 0.75rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             color: #e2e8f0;
-            border-radius: 6px;
-            font-size: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
             font-family: 'JetBrains Mono', monospace;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.3s ease;
+            letter-spacing: 0.02em;
         }
 
         .project-links {
@@ -1294,7 +1295,7 @@
                 <div class="project-header has-bg" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
                     <div class="project-badge"><i class="fas fa-comments"></i> B2B SaaS</div>
                     <h3>StartKlar</h3>
-                    <p class="project-description">AI-powered requirements gathering through natural dialogue</p>
+                    <p class="project-description" data-lang="startklar-desc">AI-powered requirements gathering through natural dialogue</p>
                 </div>
                 <div class="project-body">
                     <div class="project-tech">
@@ -1304,10 +1305,10 @@
                         <span class="tech-tag">Prisma ORM</span>
                         <span class="tech-tag">PostgreSQL</span>
                     </div>
-                    <p><strong>Automated tech specs collection via AI conversation.</strong> Multi-language dialogue system (DE/RU/EN) with real-time data extraction, live document preview, and REST API. Reduces client onboarding time by 70%. Full monorepo architecture with Docker Compose.</p>
-                    <p style="margin-top:0.75rem; font-size:0.85rem; color:var(--text-secondary);">MVP Ready &nbsp;&bull;&nbsp; 8K+ LOC &nbsp;&bull;&nbsp; 3 Languages</p>
+                    <p data-lang="startklar-text"><strong>Automated tech specs collection via AI conversation.</strong> Multi-language dialogue system (DE/RU/EN) with real-time data extraction, live document preview, and REST API. Reduces client onboarding time by 70%. Full monorepo architecture with Docker Compose.</p>
+                    <p style="margin-top:0.75rem; font-size:0.85rem; color:var(--text-secondary);" data-lang="startklar-stats">MVP Ready &nbsp;&bull;&nbsp; 8K+ LOC &nbsp;&bull;&nbsp; 3 Languages</p>
                     <div class="project-links">
-                        <a href="projects/02-startklar/README.md" class="project-link primary">Details</a>
+                        <a href="projects/02-startklar/README.md" class="project-link primary" data-lang="btn-details">Details</a>
                         <a href="https://github.com/ANTIANT1" class="project-link secondary" target="_blank">
                             <i class="fab fa-github"></i> GitHub
                         </a>
@@ -1478,7 +1479,7 @@
                 <div class="project-header has-bg" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);">
                     <div class="project-badge"><i class="fas fa-dice-d20"></i> AI + Tabletop Gaming</div>
                     <h3>AI Game Studio</h3>
-                    <p class="project-description">Automated tabletop game generator for Tabletop Simulator</p>
+                    <p class="project-description" data-lang="aigamestudio-desc">Automated tabletop game generator for Tabletop Simulator</p>
                 </div>
                 <div class="project-body">
                     <div class="project-tech">
@@ -1488,13 +1489,13 @@
                         <span class="tech-tag">BM25</span>
                         <span class="tech-tag">Replicate</span>
                     </div>
-                    <p><strong>From idea to playable prototype in 5 minutes.</strong> Multi-agent pipeline (Concept &rarr; Designer &rarr; Writer) generates GDD, 20 cards with mana curve, AI art via Flux Schnell, and exports a ready-to-play TTS .json mod. Hybrid Search META-RAG uses BGG Top-100 + Steam Workshop as knowledge base.</p>
-                    <p style="margin-top:0.75rem; font-size:0.85rem; color:var(--text-secondary);">~$0.46 per game &nbsp;&bull;&nbsp; 3-5 min pipeline &nbsp;&bull;&nbsp; MIT License</p>
+                    <p data-lang="aigamestudio-text"><strong>From idea to playable prototype in 5 minutes.</strong> Multi-agent pipeline (Concept &rarr; Designer &rarr; Writer) generates GDD, 20 cards with mana curve, AI art via Flux Schnell, and exports a ready-to-play TTS .json mod. Hybrid Search META-RAG uses BGG Top-100 + Steam Workshop as knowledge base.</p>
+                    <p style="margin-top:0.75rem; font-size:0.85rem; color:var(--text-secondary);" data-lang="aigamestudio-stats">~$0.46 per game &nbsp;&bull;&nbsp; 3-5 min pipeline &nbsp;&bull;&nbsp; MIT License</p>
                     <div class="project-links">
                         <a href="https://github.com/ANTIANT1/AI-Game-Studio" class="project-link primary" target="_blank">
                             <i class="fab fa-github"></i> GitHub
                         </a>
-                        <a href="projects/09-ai-game-studio/README.md" class="project-link secondary">Details</a>
+                        <a href="projects/09-ai-game-studio/README.md" class="project-link secondary" data-lang="btn-details">Details</a>
                     </div>
                 </div>
             </div>
@@ -1504,7 +1505,7 @@
                 <div class="project-header">
                     <div class="project-badge"><i class="fas fa-palette"></i> Learning Project</div>
                     <h3>NRW ART</h3>
-                    <p class="project-description">Online gallery for NRW artists</p>
+                    <p class="project-description" data-lang="nrwart-desc">Online gallery for NRW artists</p>
                 </div>
                 <div class="project-body">
                     <div class="project-tech">
@@ -1514,12 +1515,12 @@
                         <span class="tech-tag">Cloudinary</span>
                         <span class="tech-tag">Stripe</span>
                     </div>
-                    <p>Full-stack e-commerce platform for emerging NRW artists. Monorepo (npm workspaces). Gallery with search/filters, shopping cart, checkout with 15% commission, Cloudinary image storage. Built to explore Next.js App Router + Express + MongoDB stack.</p>
+                    <p data-lang="nrwart-text">Full-stack e-commerce platform for emerging NRW artists. Monorepo (npm workspaces). Gallery with search/filters, shopping cart, checkout with 15% commission, Cloudinary image storage. Built to explore Next.js App Router + Express + MongoDB stack.</p>
                     <div class="project-links">
                         <a href="https://github.com/ANTIANT1" class="project-link primary" target="_blank">
                             <i class="fab fa-github"></i> GitHub
                         </a>
-                        <a href="projects/10-nrwart/README.md" class="project-link secondary">Details</a>
+                        <a href="projects/10-nrwart/README.md" class="project-link secondary" data-lang="btn-details">Details</a>
                     </div>
                 </div>
             </div>
