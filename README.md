@@ -76,9 +76,9 @@ PERSONAL/
 - [x] Добавить JavaScript интерактивность
 - [x] Добавить LiD Trainer (экзамен на гражданство)
 - [x] Добавить AI Game Studio (генерация настольных игр)
-- [ ] Обновить hero-позиционирование на Full-Stack Product Engineer
-- [ ] Добавить проекты Paperclip.AI, Mafia-Online и Deutsche-Core в главную сетку
-- [ ] Объединить DTZ B1 и LiD как модули внутри Deutsche-Core
+- [x] Обновить hero-позиционирование на Knowledge & AI Systems Engineer
+- [x] Добавить Mafia-Online и Deutsche-Core в главную сетку; Paperclip.AI оставить вне featured до появления содержательного MVP
+- [x] Представить DTZ B1 и LiD как модули внутри Deutsche-Core
 - [ ] Интегрировать систему фильтрации проектов
 - [ ] Добавить темную тему
 - [ ] Разместить на хостинге (GitHub Pages / Vercel)
@@ -115,7 +115,7 @@ PERSONAL/
 
 ## 🔄 Обновления
 
-**Последнее обновление:** 4 мая 2026
+**Последнее обновление:** 3 августа 2026
 
 ### Последние изменения:
 - ✅ Обновлено позиционирование: **Full-Stack Product Engineer | AI Integration & Automation**
