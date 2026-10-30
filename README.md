@@ -1,3 +1,29 @@
+# Portfolio — updated 30 October 2026
+
+The live GitHub Pages entry point is `index.html`, with `css/portfolio.css`,
+`js/projects.js` (curated project data), and `js/portfolio.js` (EN/DE/RU/UK,
+category filters, accessible disclosures and light/dark theme).
+
+Run checks: `node --test tests/portfolio.test.cjs`.
+Preview: `python -m http.server 4187 --bind 127.0.0.1` from this directory.
+GitHub Pages serves the root of `main`; no dependency install or build is needed.
+
+## Editorial boundaries
+
+- OpenPhoto and CleanPreview are the verified public source-code projects.
+- Private projects receive descriptions and contact links, not inaccessible source links.
+- L2RUST is an experimental MMO core in Rust, in development. No client, game
+  resources, datapack, private source or legal-clearance claim is published here.
+- MagLens is a design prototype, not tested hardware. eBPF tooling observes;
+  it does not enforce a security policy. DADBS integrity is not sensor truth.
+- Engineering/CAD/BIM integration is a target direction, not a completed-client-work claim.
+- StartKlar/JETZWORK concepts and unsupported metrics are not featured.
+- Legacy project pages, scripts and document files below remain untouched for
+  compatibility. They are not the current home-page content or maintained CVs.
+- The redesign has no external font/icon dependencies, analytics or accounts.
+
+## Historical notes (superseded by the description above)
+
 # 🎨 Личное Портфолио
 
 Добро пожаловать в мой workspace! Здесь собраны мои проекты, навыки и профессиональное позиционирование как **Full-Stack Product Engineer** с фокусом на AI-интеграцию, автоматизацию и цифровые продукты.
