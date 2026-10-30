@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Yevhenii Korchevskyi: software, AI and Rust projects with a civil-engineering background. Open-source tools, prototypes and engineering experiments.">
-  <meta name="theme-color" content="#f5f4ef">
+  <meta name="theme-color" content="#0b0d0b">
   <link rel="canonical" href="https://antiant1.github.io/Portfolio/">
   <meta property="og:title" content="Yevhenii Korchevskyi — Software, AI & Engineering">
   <meta property="og:description" content="Open-source tools, AI workflows, Rust backends and engineering experiments. Explore the implementation and project status.">
@@ -12,12 +12,16 @@
   <meta property="og:url" content="https://antiant1.github.io/Portfolio/">
   <title>Yevhenii Korchevskyi — Software, AI & Engineering</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/portfolio.css?v=20261030">
+  <link rel="preload" href="assets/fonts/Manrope-Variable.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="css/portfolio.css?v=20261030-motion">
   <script defer src="js/projects.js?v=20261030"></script>
-  <script defer src="js/portfolio.js?v=20261030"></script>
+  <script defer src="js/artwork.js?v=20261030-motion"></script>
+  <script defer src="js/portfolio.js?v=20261030-motion"></script>
+  <script defer src="js/motion.js?v=20261030-motion"></script>
 </head>
 <body>
   <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+  <div class="reading-progress" aria-hidden="true"></div>
   <header class="header">
     <a class="brand" href="#" aria-label="Yevhenii Korchevskyi, home"><span class="brand-mark" aria-hidden="true">YK</span><span>Yevhenii<br>Korchevskyi</span></a>
     <nav aria-label="Main navigation"><a href="#projects" data-i18n="navProjects">Projects</a><a href="#engineering" data-i18n="navEngineering">Engineering</a><a href="#about" data-i18n="navAbout">About</a><a href="#contact" data-i18n="navContact">Contact</a></nav>
@@ -25,6 +29,7 @@
   </header>
   <main id="main">
     <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-sculpture" aria-hidden="true"><div class="sculpture-grid"></div><canvas id="hero-canvas"></canvas><span class="sculpture-label">FORM / FUNCTION / SYSTEM</span><span class="sculpture-coordinate">YK—001<br>GENERATIVE STUDY</span></div>
       <div class="hero-copy">
         <p class="eyebrow"><span class="dot"></span><span data-i18n="location">Based in Essen · Exploring opportunities in Vienna</span></p>
         <h1 id="hero-title" data-i18n="heroTitle">Software.<br>AI workflows.<br><em>Engineering thinking.</em></h1>
@@ -32,15 +37,15 @@
         <div class="actions"><a class="button primary" href="#projects"><span data-i18n="explore">Explore the work</span><span aria-hidden="true">↘</span></a><a class="button" href="https://github.com/ANTIANT1" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div>
         <p class="hero-note" data-i18n="availability">In-person conversations in Vienna from 17 November 2026, by arrangement.</p>
       </div>
-      <aside class="workbench" aria-label="Project index">
+      <div class="hero-footer"><a href="#projects" class="scroll-cue"><span aria-hidden="true">↓</span><span data-i18n="scrollLabel">Scroll to explore</span></a><button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false"><span class="motion-icon" aria-hidden="true">Ⅱ</span><span data-motion-label>Pause motion</span></button><span class="hero-edition mono">PORTFOLIO / 2026</span></div>
+    </section>
+      <aside class="workbench wrap" aria-label="Project index">
         <div class="bench-header"><span data-i18n="benchTitle">THE WORKBENCH</span><span class="mono">01—10</span></div>
         <a href="#project-openphoto" class="bench-row"><span class="bench-number">01</span><div><strong>OpenPhoto</strong><span data-i18n="benchPhoto">Local-first photo workflow</span></div><span class="bench-arrow" aria-hidden="true">↗</span></a>
         <a href="#project-cleanpreview" class="bench-row"><span class="bench-number">02</span><div><strong>CleanPreview</strong><span data-i18n="benchCleaner">Preview. Quarantine. Restore.</span></div><span class="bench-arrow" aria-hidden="true">↗</span></a>
         <a href="#project-l2rust" class="bench-row"><span class="bench-number">05</span><div><strong>L2RUST</strong><span data-i18n="benchRust">Experimental MMO core in Rust</span></div><span class="bench-arrow" aria-hidden="true">↗</span></a>
-        <div class="bench-flow" aria-hidden="true"><span>INPUT</span><i></i><span>LOGIC</span><i></i><span>RESULT</span></div>
         <p class="bench-caption" data-i18n="benchCaption">Source code where public. Clear status and boundaries for every project.</p>
       </aside>
-    </section>
     <div class="facts wrap" aria-label="Profile highlights"><div><strong>Rust + Python</strong><span data-i18n="factBuild">Backends & automation</span></div><div><strong>RAG + MCP</strong><span data-i18n="factAI">Knowledge & tool integration</span></div><div><strong data-i18n="factMaster">Master’s degree</strong><span data-i18n="factCivil">Industrial & civil engineering</span></div><div><strong data-i18n="factCode">Public source code</strong><span>OpenPhoto · CleanPreview</span></div></div>
     <section class="section wrap" id="projects" aria-labelledby="projects-title">
       <div class="section-heading"><div><p class="eyebrow" data-i18n="workEyebrow">01 / SELECTED WORK</p><h2 id="projects-title" data-i18n="workTitle">Projects &amp; experiments.</h2></div><p data-i18n="workDescription">A curated view of personal projects. Open-source releases, prototypes and ongoing research are labelled separately.</p></div>
@@ -50,7 +55,7 @@
       <p class="collection-note" data-i18n="collectionNote">Private repositories stay private. A portfolio description is not a claim of production readiness or commercial employment.</p>
     </section>
     <section class="engineering-section" id="engineering" aria-labelledby="engineering-title"><div class="wrap engineering-layout">
-      <div><p class="eyebrow" data-i18n="engineeringEyebrow">02 / WHERE THE DISCIPLINES MEET</p><h2 id="engineering-title" data-i18n="engineeringTitle">A construction background.<br>A software toolkit.</h2><p data-i18n="engineeringDescription">I want to bring my software experience into the built environment: engineering information, connected project tools and AI-assisted workflows. This is a target direction, not a claim of completed BIM deployments.</p></div>
+      <div class="engineering-intro"><p class="eyebrow" data-i18n="engineeringEyebrow">02 / WHERE THE DISCIPLINES MEET</p><h2 id="engineering-title" data-i18n="engineeringTitle">A construction background.<br>A software toolkit.</h2><p data-i18n="engineeringDescription">I want to bring my software experience into the built environment: engineering information, connected project tools and AI-assisted workflows. This is a target direction, not a claim of completed BIM deployments.</p><div id="engineering-diagram" aria-hidden="true"></div></div>
       <div class="engineering-list"><article><span class="mono">01</span><div><h3 data-i18n="aec1Title">Engineering knowledge systems</h3><p data-i18n="aec1Text">Searchable project documents, structured domain knowledge and source-linked retrieval for assistants.</p></div></article><article><span class="mono">02</span><div><h3 data-i18n="aec2Title">CAD/BIM integration & automation</h3><p data-i18n="aec2Text">APIs, data exchange and repeatable workflows around design tools. My focus is integration and automation, rather than manual CAD drafting.</p></div></article><article><span class="mono">03</span><div><h3 data-i18n="aec3Title">Visual tools & digital environments</h3><p data-i18n="aec3Text">Unreal tool integration, programmatic 3D studies and a photography/360° setup for exploring property presentation.</p></div></article></div>
     </div></section>
     <section class="section wrap about-layout" id="about" aria-labelledby="about-title">

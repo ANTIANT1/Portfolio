@@ -3,10 +3,29 @@
 The live GitHub Pages entry point is `index.html`, with `css/portfolio.css`,
 `js/projects.js` (curated project data), and `js/portfolio.js` (EN/DE/RU/UK,
 category filters, accessible disclosures and light/dark theme).
+`js/artwork.js` draws original abstract project covers; `js/motion.js` owns the
+parametric 3D hero, scroll-linked rotation, section reveals and reading progress.
+Project facts and source links are unchanged by the visual refresh.
 
 Run checks: `node --test tests/portfolio.test.cjs`.
 Preview: `python -m http.server 4187 --bind 127.0.0.1` from this directory.
 GitHub Pages serves the root of `main`; no dependency install or build is needed.
+
+With Playwright available in the development environment, run:
+
+```text
+node tests/browser-smoke.cjs <screenshot-directory> [chromium-executable]
+node tests/motion-smoke.cjs <screenshot-directory> [chromium-executable]
+```
+
+These use an isolated browser, not a personal browser profile. The motion suite
+checks six widths and four languages, real canvas changes, persisted pause,
+offscreen suspension, reduced-motion preference, visual-card links and no-JS
+fallbacks. The decorative mesh is capped at 30 fps and stops outside the viewport
+or while the tab is hidden. All motion has a visible pause control.
+
+Manrope is self-hosted in `assets/fonts/` with its SIL Open Font License 1.1.
+Abstract project artwork is illustrative, not a screenshot or proof of shipped UI.
 
 ## Editorial boundaries
 

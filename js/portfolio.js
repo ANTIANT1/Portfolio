@@ -11,6 +11,10 @@ window.PORTFOLIO_UI = {
  uk:{filters:["Усі проєкти","Відкритий код","AI та знання","Rust і системи","Ігри","Безпека","Інженерія"],count:"проєктів",details:"Реалізація та поточні обмеження",implemented:"Реалізація",limits:"Поточні межі",private:"Закритий репозиторій",talk:"Обговорити проєкт ↗",code:"Вихідний код ↗",releases:"Релізи ↗",pitch:"Концепція проєкту ↗",website:"Сайт проєкту ↗",theme:"Перемкнути темну тему",filterLabel:"Фільтр проєктів",statuses:{preview:"Відкритий код · Попередня версія",publicTool:"Відкритий код · Windows-утиліта",development:"У розробці",prototype:"Proof of concept",experimental:"Експериментальний інструмент",design:"Проєктний прототип"}}
 };
 
+Object.assign(window.PORTFOLIO_TRANSLATIONS.de,{scrollLabel:"Weiter entdecken"});
+Object.assign(window.PORTFOLIO_TRANSLATIONS.ru,{scrollLabel:"Листай дальше"});
+Object.assign(window.PORTFOLIO_TRANSLATIONS.uk,{scrollLabel:"Гортай далі"});
+
 document.addEventListener("DOMContentLoaded", () => {
   const projects = window.PORTFOLIO_PROJECTS;
   const categories = ["all","open","ai","systems","games","security","engineering"];
@@ -58,9 +62,19 @@ document.addEventListener("DOMContentLoaded", () => {
       const links = element("div","project-links");
       project.links.forEach(item=>links.append(link(ui[item.kind],item.url)));
       if(!project.public){links.append(link(ui.talk,"mailto:eugenekorchevskyi@gmail.com?subject="+encodeURIComponent("Project: "+project.name)));links.append(element("span","private-note",ui.private));}
-      card.append(top,title,element("p","project-description",copy[0]),tags,details,links); grid.append(card);
+      const art=window.PORTFOLIO_ART?.(project.id);
+      if(art){
+        const visualLink=link("","#title-"+project.id);visualLink.className="project-visual-link";
+        visualLink.setAttribute("aria-label",project.name+" — "+ui.details);visualLink.append(art);
+        visualLink.addEventListener("click",event=>{event.preventDefault();details.open=true;details.scrollIntoView({block:"center",behavior:document.documentElement.dataset.motion==="off"?"auto":"smooth"});details.querySelector("summary").focus({preventScroll:true});});
+        card.append(visualLink);
+      }
+      const content=element("div","card-content");
+      content.append(top,title,element("p","project-description",copy[0]),tags,details,links);
+      card.append(content);grid.append(card);
     });
     count.textContent = `${projects.filter(p=>filter==="all"||p.categories.includes(filter)).length} / ${projects.length} ${ui.count}`;
+    window.dispatchEvent(new CustomEvent("portfolio:render"));
   }
   function renderFilters() {
     const ui = window.PORTFOLIO_UI[language]; controls.setAttribute("aria-label",ui.filterLabel); controls.replaceChildren();
@@ -76,8 +90,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   controls.addEventListener("click",event=>{const button=event.target.closest("button[data-category]");if(!button)return;filter=button.dataset.category;controls.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b===button)));renderProjects();});
   selector.addEventListener("change",()=>{language=selector.value;saveSetting("portfolio-language",language);render();});
-  function setTheme(theme){document.documentElement.dataset.theme=theme;themeButton.setAttribute("aria-pressed",String(theme==="dark"));}
-  setTheme(readSetting("portfolio-theme")==="dark"?"dark":"light");
+  function setTheme(theme){document.documentElement.dataset.theme=theme;themeButton.setAttribute("aria-pressed",String(theme==="dark"));document.querySelector('meta[name="theme-color"]').content=theme==="dark"?"#0b0d0b":"#eeeee7";window.dispatchEvent(new CustomEvent("portfolio:theme"));}
+  setTheme(readSetting("portfolio-theme")==="light"?"light":"dark");
   themeButton.addEventListener("click",()=>{const theme=document.documentElement.dataset.theme==="dark"?"light":"dark";setTheme(theme);saveSetting("portfolio-theme",theme);});
   function revealHash(){const id=location.hash.slice(1);if(!projects.some(p=>"project-"+p.id===id))return;const target=document.getElementById(id);if(target?.hidden){filter="all";renderFilters();renderProjects();}requestAnimationFrame(()=>document.getElementById(id)?.scrollIntoView({block:"start"}));}
   window.addEventListener("hashchange",revealHash);
